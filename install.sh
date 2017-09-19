@@ -1,4 +1,2 @@
-#!/usr/bin/env bash
-echo "test";
-ehco "hello";
-echo "world";
+#!/bin/bash
+sh ./uninstall_soft.sh
