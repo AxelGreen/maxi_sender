@@ -19,7 +19,7 @@ function debian_like {
     wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
 
     # for php 7.0
-    local version=$(awk '{print $3}' /etc/*-release)
+    version=$(awk '{print $3}' /etc/*-release)
     if [ "${version}" == "8" ]; then
         echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
         echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
@@ -39,6 +39,7 @@ function debian_like {
 	php composer-setup.php
 	php -r "unlink('composer-setup.php');"
 	mv composer.phar /usr/local/bin/composer
+
 }
 
 function sudo_check {
