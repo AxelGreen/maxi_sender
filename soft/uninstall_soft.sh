@@ -14,6 +14,8 @@ function debian_like {
     for pattern in ${patterns[@]}; do
         apt-get --purge remove -y $(dpkg -l | grep ${pattern} | awk -F ' ' '{print $2}')
     done
+
+    rm -rf /usr/local/bin/composer
 }
 
 function sudo_check {

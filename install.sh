@@ -1,3 +1,3 @@
 #!/bin/bash
-sh ./uninstall_soft.sh
-sh ./install_soft.sh
+sh ./soft/uninstall_soft.sh
+sh ./soft/install_soft.sh

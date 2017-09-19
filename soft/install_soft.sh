@@ -33,6 +33,12 @@ function debian_like {
     apt-get install -y fail2ban htop
     apt-get install -y postgresql-9.6 erlang erlang-nox rabbitmq-server exim4
     apt-get install -y --allow-unauthenticated php7.0 php7.0-opcache php7.0-mbstring php7.0-bcmath php7.0-zip php7.0-geoip php7.0-curl php7.0-json php7.0-pgsql php7.0-cli
+
+	# composer
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+	php composer-setup.php
+	php -r "unlink('composer-setup.php');"
+	mv composer.phar /usr/local/bin/composer
 }
 
 function sudo_check {
