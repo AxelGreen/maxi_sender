@@ -43,7 +43,8 @@ echo "  file = /dev/null" >> /etc/exim4/conf.d/transport/30_exim4-config_address
 # mail_spool transport
 sed -i "/^.*file.*=.*$/,+1d" /etc/exim4/conf.d/transport/30_exim4-config_mail_spool
 echo "  file = /dev/null" >> /etc/exim4/conf.d/transport/30_exim4-config_mail_spool
-
+# rewrite all income letters to mail@${domain} email, where ${domain} - domain from original from email
+echo "*@* \"mail@\${domain}\"" > /etc/exim4/conf.d/rewrite/10_exim4-config_mail
 
 # restart exim to apply changes
 /etc/init.d/exim4 restart
