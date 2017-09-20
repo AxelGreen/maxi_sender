@@ -24,6 +24,9 @@ echo "remote_max_parallel = 100" >> /etc/exim4/conf.d/main/02_exim4-config_optio
 # split spool files to separate directories
 sed -i "/split_spool_directory/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
 echo "split_spool_directory = true" >> /etc/exim4/conf.d/main/02_exim4-config_options
+# split spool files to separate directories
+sed -i "/write_rejectlog/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
+echo "write_rejectlog = false" >> /etc/exim4/conf.d/main/02_exim4-config_options
 # ignore bounce messages - newer try to resend them
 sed -i "s/^.*MAIN_IGNORE_BOUNCE_ERRORS_AFTER.*=.*$/MAIN_IGNORE_BOUNCE_ERRORS_AFTER = 0m/" /etc/exim4/conf.d/main/02_exim4-config_options
 # how long to keep frozen defer messages before send
