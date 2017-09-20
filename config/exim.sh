@@ -10,5 +10,27 @@ sed -i "s/^.*dc_local_interfaces.*=.*$/dc_local_interfaces=''/" /etc/exim4/updat
 sed -i "s/^.*dc_other_hostnames.*=.*$/dc_other_hostnames='\/etc\/exim4\/domains\.virtual'/" /etc/exim4/update-exim4.conf.conf
 # exim will use split config files
 sed -i "s/^.*dc_use_split_config.*=.*$/dc_use_split_config='true'/" /etc/exim4/update-exim4.conf.conf
-# set retry config
-sed "s/^.*\*.*\*.*$/vdsfsd/" /etc/exim4/conf.d/retry/30_exim4-config
+# set retry config. one minute after error occurred, 6 minutes after error occurred, 31 minute after error occurred
+sed -i "s/^.*\*.*\*.*$/* * G,35m,1m,5;/" /etc/exim4/conf.d/retry/30_exim4-config
+# change interval between each start of queue runner - process with check maybe need to send some previously queued emails
+sed -i "s/^.*QUEUEINTERVAL.*$/QUEUEINTERVAL='5m'/" /etc/default/exim4
+# change set of information printed to log
+sed -i "s/^.*MAIN_LOG_SELECTOR == .*$/MAIN_LOG_SELECTOR == MAIN_LOG_SELECTOR -subject -arguments -tls_peerdn -tls_cipher/" /etc/exim4/conf.d/main/90_exim4-config_log_selector
+# set maximum amount of simultaneously queues running
+sed -i "/queue_run_max/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
+echo "queue_run_max = 50" >> /etc/exim4/conf.d/main/02_exim4-config_options
+# set maximum amount of simultaneously sending letters
+sed -i "/remote_max_parallel/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
+echo "remote_max_parallel = 100" >> /etc/exim4/conf.d/main/02_exim4-config_options
+# split spool files to separate directories
+sed -i "/split_spool_directory/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
+echo "split_spool_directory = true" >> /etc/exim4/conf.d/main/02_exim4-config_options
+# ignore bounce messages - newer try to resend them
+sed -i "s/^.*MAIN_IGNORE_BOUNCE_ERRORS_AFTER.*=.*$/MAIN_IGNORE_BOUNCE_ERRORS_AFTER = 0m/" /etc/exim4/conf.d/main/02_exim4-config_options
+# how long to keep frozen defer messages before send
+sed -i "s/^.*MAIN_TIMEOUT_FROZEN_AFTER.*=.*$/MAIN_TIMEOUT_FROZEN_AFTER = 1h/" /etc/exim4/conf.d/main/02_exim4-config_options
+# disable sending letters about freezing letters
+sed -i "s/^(.*freeze_tell.*=.*)$/#\1/" /etc/exim4/conf.d/main/02_exim4-config_options
+# stop writing separate logs for each message - files from folder /var/spool/exim_incoming/msglog/
+sed -i "/no_message_logs/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
+echo "no_message_logs" >> /etc/exim4/conf.d/main/02_exim4-config_options
