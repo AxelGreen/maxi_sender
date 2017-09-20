@@ -5,3 +5,6 @@
 ./soft/install_soft.sh
 # run all configuration change files
 ./config/exim.sh
+./config/postgres.sh
+./config/fail2ban.sh
+./config/rabbit.sh
