@@ -29,7 +29,11 @@ sed -i "s/^.*MAIN_IGNORE_BOUNCE_ERRORS_AFTER.*=.*$/MAIN_IGNORE_BOUNCE_ERRORS_AFT
 # how long to keep frozen defer messages before send
 sed -i "s/^.*MAIN_TIMEOUT_FROZEN_AFTER.*=.*$/MAIN_TIMEOUT_FROZEN_AFTER = 1h/" /etc/exim4/conf.d/main/02_exim4-config_options
 # disable sending letters about freezing letters
-sed -i "s/^(.*freeze_tell.*=.*)$/#\1/" /etc/exim4/conf.d/main/02_exim4-config_options
+sed -i -r "s/^(.*freeze_tell.*=.*)$/#\1/" /etc/exim4/conf.d/main/02_exim4-config_options
 # stop writing separate logs for each message - files from folder /var/spool/exim_incoming/msglog/
 sed -i "/no_message_logs/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
 echo "no_message_logs" >> /etc/exim4/conf.d/main/02_exim4-config_options
+
+
+# restart exim to apply changes
+/etc/init.d/exim4 restart
