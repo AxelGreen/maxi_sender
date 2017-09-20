@@ -33,6 +33,13 @@ sed -i -r "s/^(.*freeze_tell.*=.*)$/#\1/" /etc/exim4/conf.d/main/02_exim4-config
 # stop writing separate logs for each message - files from folder /var/spool/exim_incoming/msglog/
 sed -i "/no_message_logs/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
 echo "no_message_logs" >> /etc/exim4/conf.d/main/02_exim4-config_options
+# redirect income letters to /dev/null
+# address_file transport
+sed -i "/^.*file.*=.*$/,+1d" /etc/exim4/conf.d/transport/30_exim4-config_address_file
+echo "  file = /dev/null" >> /etc/exim4/conf.d/transport/30_exim4-config_address_file
+# mail_spool transport
+sed -i "/^.*file.*=.*$/,+1d" /etc/exim4/conf.d/transport/30_exim4-config_mail_spool
+echo "  file = /dev/null" >> /etc/exim4/conf.d/transport/30_exim4-config_mail_spool
 
 
 # restart exim to apply changes
