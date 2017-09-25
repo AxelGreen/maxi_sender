@@ -8,3 +8,7 @@
 ./config/postgres.sh
 ./config/fail2ban.sh
 ./config/rabbit.sh
+
+
+# update cron
+./config/cron.sh
