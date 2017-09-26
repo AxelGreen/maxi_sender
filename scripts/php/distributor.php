@@ -15,9 +15,10 @@
         'e' => 'axelgreenkp@gmail.com',
         'i' => 134720871,
         'd' => array(
-            'n' => 'Axel'
+            'n' => 'Axel',
+            ''
         ),
-        'h' => 'host.com'
+        'h' => 'albatross-pay.ru'
     );
     $message = new AMQPMessage(json_encode($new_pool, JSON_HEX_QUOT), array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
 

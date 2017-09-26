@@ -18,6 +18,8 @@
             $mailer->Hostname = $headers['hostname'];
             $mailer->Encoding = $headers['encoding'];
             $mailer->CharSet = $headers['charset'];
+            // disable X-Mailer
+            $mailer->XMailer = ' ';
 
             // content
             $mailer->Sender = $letter['sender_email'];

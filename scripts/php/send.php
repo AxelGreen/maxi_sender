@@ -24,8 +24,6 @@
 
     // timestamp when script must stop processing and exit. One last message will be processed until exit
     $end_time = strtotime($sender_settings->time_to_live) + (rand(1, 60) * 60);
-    // TODO: delete
-    $end_time = time();
 
     // connect to Rabbit
     $rabbit_connection = RabbitConnection::getInstance($sender_settings->local_rabbit['connection_name'])->getConnection();

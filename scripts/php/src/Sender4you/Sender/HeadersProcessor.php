@@ -105,6 +105,7 @@
         private function messageId(array $pool)
         {
 
+            // TODO: encode it
             $task_id = $pool['task_id'];
             $email_id = $pool['email_id'];
             $host = $pool['host'];

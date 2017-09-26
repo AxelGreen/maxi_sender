@@ -5,7 +5,6 @@ sed -i "s/^.*dc_eximconfig_configtype.*=.*$/dc_eximconfig_configtype='internet'/
 sed -i "s/^.*dc_localdelivery.*=.*$/dc_localdelivery='mail_spool'/" /etc/exim4/update-exim4.conf.conf
 # interfaces (IPs) which Exim will listen to. Empty value means that listen all interfaces
 sed -i "s/^.*dc_local_interfaces.*=.*$/dc_local_interfaces=''/" /etc/exim4/update-exim4.conf.conf
-# TODO: generate /etc/exim4/domains.virtual file. Contains all domains connected to this VPS (2 records for each domain: domain.com and *.domain.com )
 # list of domains which Exim will consider as itself (get emails for this domains, not relay them)
 sed -i "s/^.*dc_other_hostnames.*=.*$/dc_other_hostnames='\/etc\/exim4\/domains.virtual'/" /etc/exim4/update-exim4.conf.conf
 # exim will use split config files
@@ -46,5 +45,7 @@ sed -i "/^.*file.*=.*$/,+1d" /etc/exim4/conf.d/transport/30_exim4-config_mail_sp
 echo "  file = /dev/null" >> /etc/exim4/conf.d/transport/30_exim4-config_mail_spool
 # rewrite all income letters to mail@${domain} email, where ${domain} - domain from original to_email
 echo "* \"\${if ! eq {\$sender_host_address}{}{mail@\${domain}}fail}\"" > /etc/exim4/conf.d/rewrite/10_exim4-config_mail
+#dkim
+#/etc/exim4/conf.d/transport/30_exim4-config_remote_smtp
 # restart exim to apply changes
 /etc/init.d/exim4 restart
