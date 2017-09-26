@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# check if root running this script
-if [ "$EUID" -ne 0 ]; then
-    echo "Run script as root"
-    exit 1
-fi
+# stop services
+/etc/init.d/exim4 stop
+/etc/init.d/fail2ban stop
+/etc/init.d/postgresql stop
+/etc/init.d/rabbitmq-server stop
 
 which add-apt-repository > /dev/null 2>&1
 if [ $? -ne 0 ]; then
