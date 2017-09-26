@@ -8,7 +8,8 @@
 ./config/postgres.sh
 ./config/fail2ban.sh
 ./config/rabbit.sh
-
-
+# install php scripts
+./soft/uninstall_scripts.sh
+./soft/install_scripts.sh
 # update cron
 ./config/cron.sh
