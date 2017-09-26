@@ -23,6 +23,7 @@ fi
 ./soft/install_scripts.sh
 
 # run script to configure some soft and scripts: change configuration file for scripts (set passwords, etc), get dkims and domains.virtual for Exim, create db for Postgres
+php7.0 ./scripts/php/configure.php
 
 # update cron
 ./config/cron.sh
