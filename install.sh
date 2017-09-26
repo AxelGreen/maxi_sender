@@ -10,13 +10,19 @@ fi
 ./soft/uninstall_soft.sh
 # run installation
 ./soft/install_soft.sh
+
 # run all configuration change files
 ./config/exim.sh
 ./config/postgres.sh
 ./config/fail2ban.sh
 ./config/rabbit.sh
-# install php scripts
+
+# remove all scripts
 ./soft/uninstall_scripts.sh
+# install php scripts
 ./soft/install_scripts.sh
+
+# run script to configure some soft and scripts: change configuration file for scripts (set passwords, etc), get dkims and domains.virtual for Exim, create db for Postgres
+
 # update cron
 ./config/cron.sh
