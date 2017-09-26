@@ -47,7 +47,8 @@
                 'version_prefix' => 'maxi/',
                 'endpoints'      => array(
                     'template'        => 'template',
-                    'redirectDomains' => 'redirectDomains'
+                    'redirectDomains' => 'redirectDomains',
+                    'ips'             => 'ips'
                 )
             );
 
