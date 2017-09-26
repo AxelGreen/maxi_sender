@@ -1,11 +1,5 @@
 #!/bin/bash -x
 
-# check if root running this script
-if [ "$EUID" -ne 0 ]; then
-    echo "Run script as root"
-    exit 1
-fi
-
 # add repositories
 apt-get update
 which add-apt-repository > /dev/null 2>&1
