@@ -12,7 +12,7 @@
          */
         public $local_rabbit
             = array(
-                'connection_name' => 'rabbit_local_receive',
+                'connection_name' => 'rabbit_local',
                 'queue_name'      => 'local_senders'
             );
 

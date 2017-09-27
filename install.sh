@@ -39,5 +39,4 @@ echo Cron
 echo Installation end: $(date)
 echo Cleanup files
 # cleanup installation files
-# TODO: uncomment
-#./soft/cleanup.sh
+./soft/cleanup.sh

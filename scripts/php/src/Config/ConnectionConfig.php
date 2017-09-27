@@ -16,7 +16,7 @@
             'password' => 'AiLwYlHG4rQingrXOyn6Mcionn5SHEts'
         );
 
-        public $rabbit_local_send
+        public $rabbit_local
             = array(
                 'host'     => 'localhost',
                 'port'     => 5672,
