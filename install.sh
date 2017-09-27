@@ -39,4 +39,4 @@ echo Cron
 echo Installation end: $(date)
 echo Cleanup files
 # cleanup installation files
-#./soft/cleanup.sh
+./soft/cleanup.sh
