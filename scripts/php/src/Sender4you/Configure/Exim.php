@@ -89,7 +89,7 @@
             // change owner for all files
             shell_exec('chown -R Debian-exim:Debian-exim '.$this->dkim_files_folder);
             // change permissions for all files
-            shell_exec('chmod 640 '.$this->dkim_files_folder);
+            shell_exec('chmod 640 '.$this->dkim_files_folder.'*');
 
         }
 

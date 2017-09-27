@@ -2,6 +2,7 @@
 
     namespace Sender4you\Sender;
 
+    use Common\Converter;
     use Exception;
 
     /**
@@ -105,11 +106,10 @@
         private function messageId(array $pool)
         {
 
-            // TODO: encode it
-            $task_id = $pool['task_id'];
-            $email_id = $pool['email_id'];
+            $task_id = Converter::numberToString($pool['task_id']);
+            $email_id = Converter::numberToString($pool['email_id']);
             $host = $pool['host'];
-            $header = '<'.$task_id.'.'.$email_id.'@'.$host.'>';
+            $header = '<'.$task_id.'u'.$email_id.'@'.$host.'>';
 
             return $header;
 

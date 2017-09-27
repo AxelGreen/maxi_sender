@@ -15,8 +15,7 @@
         'e' => 'axelgreenkp@gmail.com',
         'i' => 134720871,
         'd' => array(
-            'n' => 'Axel',
-            ''
+            'n' => 'Axel'
         ),
         'h' => 'albatross-pay.ru'
     );

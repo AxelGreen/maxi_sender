@@ -16,6 +16,7 @@ fi
 ./config/postgres.sh
 ./config/fail2ban.sh
 ./config/rabbit.sh
+./config/php.sh
 
 # remove all scripts
 ./soft/uninstall_scripts.sh

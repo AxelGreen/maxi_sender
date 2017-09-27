@@ -45,7 +45,27 @@ sed -i "/^.*file.*=.*$/,+1d" /etc/exim4/conf.d/transport/30_exim4-config_mail_sp
 echo "  file = /dev/null" >> /etc/exim4/conf.d/transport/30_exim4-config_mail_spool
 # rewrite all income letters to mail@${domain} email, where ${domain} - domain from original to_email
 echo "* \"\${if ! eq {\$sender_host_address}{}{mail@\${domain}}fail}\"" > /etc/exim4/conf.d/rewrite/10_exim4-config_mail
-#dkim
-#/etc/exim4/conf.d/transport/30_exim4-config_remote_smtp
+# disable received header
+sed -i "/received_header_text/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
+echo "received_header_text = " >> /etc/exim4/conf.d/main/02_exim4-config_options
+# change helo data
+sed -i "/REMOTE_SMTP_HELO_DATA/,+1d" /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+echo "REMOTE_SMTP_HELO_DATA = \$sender_address_domain" >> /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+# dkim
+# domain
+sed -i "/DKIM_DOMAIN/,+1d" /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+echo "DKIM_DOMAIN = \$sender_address_domain" >> /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+# file
+sed -i "/DKIM_FILE/,+1d" /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+echo "DKIM_FILE = /etc/exim4/dkim/\$sender_address_domain.pem" >> /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+# private key
+sed -i "/DKIM_PRIVATE_KEY/,+1d" /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+echo "DKIM_PRIVATE_KEY = \${if exists{DKIM_FILE}{DKIM_FILE}{0}}" >> /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+# selector
+sed -i "/DKIM_SELECTOR/,+1d" /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+echo "DKIM_SELECTOR = default" >> /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+# canon - type of dkim check. if canon set to relaxed - check will ignore whitespaces etc, with simple canon - all characters will be included to check
+sed -i "/DKIM_CANON/,+1d" /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+echo "DKIM_CANON = relaxed" >> /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
 # restart exim to apply changes
 /etc/init.d/exim4 restart
