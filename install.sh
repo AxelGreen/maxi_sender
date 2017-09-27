@@ -30,7 +30,7 @@ echo Scripts
 
 echo Configure
 # run script to configure some soft and scripts: change configuration file for scripts (set passwords, etc), get dkims and domains.virtual for Exim, create db for Postgres
-php7.0 ./scripts/php/configure.php
+php7.0 /etc/sender4you/scripts/php/configure.php
 
 echo Cron
 # update cron
