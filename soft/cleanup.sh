@@ -3,5 +3,6 @@
 cp /root/maxi_sender/install.log /var/log/sender4you/install.log
 # remove all installation files
 rm -rf /root/maxi_sender/
+rm -rf /root/install_run.sh
 # purge git
 apt-get purge -y git
