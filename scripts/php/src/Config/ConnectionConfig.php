@@ -16,15 +16,7 @@
             'password' => 'AiLwYlHG4rQingrXOyn6Mcionn5SHEts'
         );
 
-        // TODO: change local user
         public $rabbit_local_send
-            = array(
-                'host'     => 'localhost',
-                'port'     => 5672,
-                'user'     => 'guest',
-                'password' => 'guest'
-            );
-        public $rabbit_local_receive
             = array(
                 'host'     => 'localhost',
                 'port'     => 5672,

@@ -3,12 +3,16 @@
     require_once __DIR__.'/vendor/autoload.php';
 
     use Common\Connection\RabbitConnection;
+    use Config\SenderConfig;
     use PhpAmqpLib\Message\AMQPMessage;
 
-    $rabbit_connection = RabbitConnection::getInstance('rabbit_local_send')->getConnection();
+    // sender config
+    $sender_settings = SenderConfig::getInstance();
+
+    $rabbit_connection = RabbitConnection::getInstance($sender_settings->local_rabbit['connection_name'])->getConnection();
     $rabbit_channel = $rabbit_connection->channel();
 
-    $rabbit_channel->queue_declare('local_senders', false, true, false, false);
+    $rabbit_channel->queue_declare($sender_settings->local_rabbit['queue_name'], false, true, false, false);
 
     $new_pool = array(
         't' => 40,
@@ -21,7 +25,7 @@
     );
     $message = new AMQPMessage(json_encode($new_pool, JSON_HEX_QUOT), array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
 
-    $rabbit_channel->basic_publish($message, '', 'local_senders');
+    $rabbit_channel->basic_publish($message, '', $sender_settings->local_rabbit['queue_name']);
 
     echo('Message send'.PHP_EOL);
 
