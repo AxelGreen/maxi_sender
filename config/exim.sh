@@ -14,7 +14,10 @@ sed -i "s/^.*\*.*\*.*$/* * G,35m,1m,5;/" /etc/exim4/conf.d/retry/30_exim4-config
 # change interval between each start of queue runner - process with check maybe need to send some previously queued emails
 sed -i "s/^.*QUEUEINTERVAL.*$/QUEUEINTERVAL='5m'/" /etc/default/exim4
 # change set of information printed to log
-sed -i "s/^.*MAIN_LOG_SELECTOR == .*$/MAIN_LOG_SELECTOR == MAIN_LOG_SELECTOR -subject -arguments -tls_peerdn -tls_cipher/" /etc/exim4/conf.d/main/90_exim4-config_log_selector
+sed -i "s/^.*MAIN_LOG_SELECTOR == .*$/MAIN_LOG_SELECTOR == MAIN_LOG_SELECTOR -all/" /etc/exim4/conf.d/main/90_exim4-config_log_selector
+# change time format for log entries - log with timezone
+sed -i "/log_timezone/,+1d" /etc/exim4/conf.d/main/90_exim4-config_log_selector
+echo "log_timezone = true" >> /etc/exim4/conf.d/main/90_exim4-config_log_selector
 # set maximum amount of simultaneously queues running
 sed -i "/queue_run_max/,+1d" /etc/exim4/conf.d/main/02_exim4-config_options
 echo "queue_run_max = 50" >> /etc/exim4/conf.d/main/02_exim4-config_options
