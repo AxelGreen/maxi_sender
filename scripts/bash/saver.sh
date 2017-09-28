@@ -6,12 +6,12 @@ FILE=$(./file_rotate.sh insert.sql)
 # check if file not empty
 if [ $(wc -l $FILE | awk '{print $1}') -eq 0 ]; then
 	echo "empty file"
-	return
+	exit 1
 fi
 
 echo "not empty"
 # TODO: delete
-return
+exit 1
 
 # execute file
 # TODO: execute file
