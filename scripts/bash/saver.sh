@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # name of file which contains commands
-FILE=$(./file_rotate.sh insert.sql)
+FILE=$(./file_rotate.sh insert)
 
 # check if file not empty
 if [ $(wc -l $FILE | awk '{print $1}') -eq 0 ]; then
 	echo "empty file"
+	rm $FILE
 	exit 1
 fi
 
