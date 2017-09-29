@@ -8,5 +8,5 @@ if [ $MUTATOR_COUNT -gt 0 ]; then
 fi
 
 # run mutator
-nohup /etc/sender4you/bash/mutator.sh 2>/var/log/sender4you/mutator.log  1>/dev/null &
+nohup /etc/sender4you/bash/mutator.sh 2>>/var/log/sender4you/mutator.log  1>/dev/null &
 disown
