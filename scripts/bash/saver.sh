@@ -1,16 +1,13 @@
 #!/bin/bash
 
 # name of file which contains commands
-FILE=$(./file_rotate.sh insert)
+FILE=$(/etc/sender4you/bash/file_rotate.sh /etc/sender4you/bash/insert)
 
 # check if file not empty
 if [ $(wc -l $FILE | awk '{print $1}') -eq 0 ]; then
-	echo "empty file"
 	rm $FILE
 	exit 1
 fi
-
-echo "not empty"
 
 # execute file
 su - postgres -c "psql --file=$FILE --dbname=postgres"
