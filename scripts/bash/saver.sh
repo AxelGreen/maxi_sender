@@ -10,7 +10,7 @@ if [ $(wc -l $FILE | awk '{print $1}') -eq 0 ]; then
 fi
 
 # execute file
-su - postgres -c "psql --file=$FILE --dbname=postgres"
+su - postgres -c "psql --file=$FILE --dbname=postgres > /dev/null"
 
 # delete file
 rm $FILE
