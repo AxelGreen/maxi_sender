@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # output file
-OUTPUT="insert"
+OUTPUT="/etc/sender4you/bash/insert"
 
 # list of regex
 MAIN_REGEX="^(.{25}) (.{6}-.{6}-.{2}) (\*\*|<=|=>|==) (.*)$"
