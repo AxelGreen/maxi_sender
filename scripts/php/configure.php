@@ -1,6 +1,7 @@
 <?php
 
     use Sender4you\Configure\Exim;
+    use Sender4you\Configure\Postgres;
 
     require_once __DIR__.'/vendor/autoload.php';
 
@@ -13,7 +14,10 @@
         // restart exim
         $exim->restart();
 
-        var_dump($exim->domains);
+        // postgresql
+        $postgres = new Postgres();
+        // create table
+        $postgres->run();
 
     } catch (Exception $exception) {
 

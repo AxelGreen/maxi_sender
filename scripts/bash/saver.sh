@@ -11,14 +11,12 @@ if [ $(wc -l $FILE | awk '{print $1}') -eq 0 ]; then
 fi
 
 echo "not empty"
-# TODO: delete
-exit 1
 
 # execute file
-# TODO: execute file
+su - postgres -c "psql --file=$FILE --dbname=postgres"
 
 # delete file
 rm $FILE
 
 # call api to tell that this server has something to download to main server
-# TODO: call api
+wget --quiet http://api.sender4you.com/maxi/statisticsReady

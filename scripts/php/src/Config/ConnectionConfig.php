@@ -13,7 +13,7 @@
             'host'     => 'localhost',
             'dbname'   => 'postgres',
             'user'     => 'postgres',
-            'password' => 'AiLwYlHG4rQingrXOyn6Mcionn5SHEts'
+            'password' => ''
         );
 
         public $rabbit_local

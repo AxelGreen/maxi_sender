@@ -11,7 +11,7 @@ SUCCESS_REGEX=" T=remote_smtp "
 BOUNCE_REGEX=" F=<[^>]+>: (.*)$"
 
 # parts of query
-QUERY_START="INSERT INTO public.exim_log (date, exim_id, action, message_id, host, error) VALUES "
+QUERY_START="INSERT INTO public.exim_logs (date, exim_id, action, message_id, host, error) VALUES "
 QUERY_END=" ON CONFLICT (exim_id) DO UPDATE SET date = excluded.date, action = excluded.action, error = excluded.error;"
 QUERY=""
 
