@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# check if insert file exist
+if [ ! -f /etc/sender4you/bash/insert ]; then
+	exit 1
+fi
+
 # name of file which contains commands
 FILE=$(/etc/sender4you/bash/file_rotate.sh /etc/sender4you/bash/insert)
 
