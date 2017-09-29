@@ -40,3 +40,6 @@ echo Installation end: $(date)
 echo Cleanup files
 # cleanup installation files
 ./soft/cleanup.sh
+
+# call api to tell that this installation complete
+wget --quiet http://api.sender4you.com/maxi/finishInstall
