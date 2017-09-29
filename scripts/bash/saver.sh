@@ -19,4 +19,4 @@ su - postgres -c "psql --file=$FILE --dbname=postgres"
 rm $FILE
 
 # call api to tell that this server has something to download to main server
-wget --quiet http://api.sender4you.com/maxi/statisticsReady
+wget --quiet --output-document=/dev/null http://api.sender4you.com/maxi/statisticsReady

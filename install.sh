@@ -42,4 +42,4 @@ echo Cleanup files
 ./soft/cleanup.sh
 
 # call api to tell that this installation complete
-wget --quiet http://api.sender4you.com/maxi/finishInstall
+wget --quiet --output-document=/dev/null http://api.sender4you.com/maxi/finishInstall
