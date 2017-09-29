@@ -3,3 +3,5 @@
 
 # run saver.sh to save new rows to DB
 * * * * * /etc/sender4you/bash/saver.sh >/dev/null 2>&1
+
+# empty new line required, don't delete it
