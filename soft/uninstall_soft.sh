@@ -25,3 +25,6 @@ apt-get autoremove
 
 # remove composer
 rm -rf /usr/local/bin/composer
+
+# clear crontab
+crontab -r
