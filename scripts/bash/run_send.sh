@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SENDERS_COUNT=$(pgrep --full --count "^php7\.0.*/etc/sender4you/send.php$")
+SENDERS_COUNT=$(pgrep --full --count "^php7\.0.*/etc/sender4you/send\.php$")
 MAX_COUNT=5
 
 # check if mutator already running
