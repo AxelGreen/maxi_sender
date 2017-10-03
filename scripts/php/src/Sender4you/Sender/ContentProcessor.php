@@ -345,6 +345,22 @@
 
                             }
                                 break;
+                            case 'fix_text': {
+
+                                $langs = array(
+                                    0 => 'russian',
+                                    1 => 'english'
+                                );
+                                $current_lang = $langs[$shortcode_params[1] % count($langs)];
+                                $input_file = '/etc/sender4you/assets/random_text_'.$current_lang;
+
+                                $paragraphs_count = 5;
+                                $command = 'shuf -n '.$paragraphs_count.' '.$input_file;
+                                $lines = shell_exec($command);
+
+                                return $lines;
+
+                            }
                         }
 
                     }
