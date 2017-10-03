@@ -35,7 +35,8 @@
         private $fixed_shortcodes
             = array(
                 'fix_int'  => 1,
-                'fix_link' => 1
+                'fix_link' => 1,
+                'fix_text' => 1
             );
 
         /**
@@ -346,7 +347,6 @@
                             }
                                 break;
                             case 'fix_text': {
-
                                 $langs = array(
                                     0 => 'russian',
                                     1 => 'english'
