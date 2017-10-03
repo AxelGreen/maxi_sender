@@ -337,10 +337,15 @@
 
                                 $redirect_prefixes = array(
                                     1 => 'http://',
-                                    2 => 'https://www.google.com/search?btnI&q=site:'
+                                    2 => 'https://www.google.com/search?btnI&q=site:',
+                                    3 => 'http://www.site.com@'
                                 );
 
                                 $redirect_link = $redirect_prefixes[$redirect_variant].$subdomain.'.'.$redirect_domain;
+
+                                //if ($redirect_variant === 3) {
+                                //    $redirect_link = base64_encode($redirect_link);
+                                //}
 
                                 return $redirect_link;
 
