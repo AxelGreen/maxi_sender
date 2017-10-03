@@ -15,7 +15,7 @@
     $rabbit_channel->queue_declare($sender_settings->local_rabbit['queue_name'], false, true, false, false);
 
     $new_pool = array(
-        't' => 40,
+        't' => 44,
         'e' => 'axelgreenkp@gmail.com',
         'i' => 134720871,
         'd' => array(
