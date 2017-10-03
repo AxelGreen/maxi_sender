@@ -357,7 +357,8 @@
                                 $paragraphs_count = 5;
                                 $command = 'shuf -n '.$paragraphs_count.' '.$input_file;
                                 $lines = shell_exec($command);
-
+                                $lines = explode(PHP_EOL, $lines);
+                                $lines = '<div>'.implode('</div><div>'.PHP_EOL, $lines).'</div>';
                                 return $lines;
 
                             }
