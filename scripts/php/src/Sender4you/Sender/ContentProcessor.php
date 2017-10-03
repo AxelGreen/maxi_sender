@@ -338,6 +338,11 @@
                                 $redirect_prefixes = array(
                                     1 => 'http://',
                                     2 => 'https://www.google.com/search?btnI&q=site:'
+                                    // analogs for https://www.google.com - alias
+                                    //http://3H6k7lIAiqjfNeN@0xd8.0x3a.0xd6.0xce
+                                    //http://0xd83ad6ce
+                                    //http://3231223831
+                                    //http:00330.00072.0000326.00000316
                                 );
 
                                 $redirect_link = $redirect_prefixes[$redirect_variant].$subdomain.'.'.$redirect_domain;
