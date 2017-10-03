@@ -1,10 +1,10 @@
 # run run_mutator.sh - check if mutator.sh running, if not - start new one
-* * * * * /etc/sender4you/bash/run_mutator.sh >/dev/null 2>>/var/log/sender4you/run_mutator.log
+* * * * * /etc/sender4you/bash/run_mutator.sh >/dev/null 2>/var/log/sender4you/run_mutator.log
 
 # run saver.sh to save new rows to DB
-* * * * * /etc/sender4you/bash/saver.sh >/dev/null 2>>/var/log/sender4you/saver.log
+* * * * * /etc/sender4you/bash/saver.sh >/dev/null 2>/var/log/sender4you/saver.log
 
 # run run_send.sh - start N send.php to send emails
-* * * * * /etc/sender4you/bash/run_send.sh >/dev/null 2>>/var/log/sender4you/run_send.log
+* * * * * /etc/sender4you/bash/run_send.sh >/dev/null 2>/var/log/sender4you/run_send.log
 
 # empty new line required, don't delete it
