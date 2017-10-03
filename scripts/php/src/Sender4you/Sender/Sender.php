@@ -16,7 +16,7 @@
             // headers
             $mailer->MessageID = $headers['message_id'];
             $mailer->Hostname = $headers['hostname'];
-            $mailer->Encoding = $headers['encoding'];
+            //$mailer->Encoding = $headers['encoding'];
             $mailer->CharSet = $headers['charset'];
             // disable X-Mailer
             $mailer->XMailer = ' ';
