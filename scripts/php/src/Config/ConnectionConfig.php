@@ -16,10 +16,10 @@
             'password' => ''
         );
 
-        public $rabbit_local
+        public $bunny_local
             = array(
                 'host'     => 'localhost',
-                'port'     => 5672,
+                'vhost'    => '/',
                 'user'     => 'guest',
                 'password' => 'guest'
             );

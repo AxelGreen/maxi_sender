@@ -3,7 +3,7 @@
     require_once __DIR__.'/vendor/autoload.php';
 
     use Bunny\Client;
-    use Common\Connection\RabbitConnection;
+    use Common\Connection\BunnyConnection;
     use Config\SenderConfig;
 
     $connection = [

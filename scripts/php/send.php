@@ -1,6 +1,9 @@
 <?php
 
-    use Common\Connection\RabbitConnection;
+    use Bunny\Channel;
+    use Bunny\Client;
+    use Bunny\Message;
+    use Common\Connection\BunnyConnection;
     use Config\SenderConfig;
     use PhpAmqpLib\Message\AMQPMessage;
     use Sender4you\Log\Error;
@@ -23,20 +26,20 @@
     $sender_settings = SenderConfig::getInstance();
 
     // timestamp when script must stop processing and exit. One last message will be processed until exit
-    $end_time = strtotime($sender_settings->time_to_live) + (rand(1, 60) * 60);
+    $time_limit = $sender_settings->time_to_live + (rand(1, 60) * 60);
 
     // connect to Rabbit
-    $rabbit_connection = RabbitConnection::getInstance($sender_settings->local_rabbit['connection_name'])->getConnection();
-    $rabbit_channel = $rabbit_connection->channel();
+    $bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
+    $bunny_channel = $bunny_connection->channel();
 
     // declare queue
-    $rabbit_channel->queue_declare($sender_settings->local_rabbit['queue_name'], false, true, false, false);
+    $bunny_channel->queueDeclare($sender_settings->local_bunny['queue_name'], false, true, false, false);
 
     // callback to process messages
-    $callback = function (AMQPMessage $message) {
+    $callback = function (Message $message, Channel $channel) {
 
         // decode message
-        $pool = json_decode($message->body, true);
+        $pool = json_decode($message->content, true);
 
         try {
 
@@ -90,31 +93,22 @@
         }
 
         // acknowledge message processing
-        $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
+        $channel->ack($message);
 
     };
 
     // process messages one by one. Allows get new task already after this is completed (disable Fair dispatch)
-    $rabbit_channel->basic_qos(null, 1, null);
+    $bunny_channel->qos(0, 1, null);
 
     // consume to queue
-    $rabbit_channel->basic_consume($sender_settings->local_rabbit['queue_name'], '', false, false, false, false, $callback);
+    $bunny_channel->consume($callback, $sender_settings->local_bunny['queue_name'], '', false, false, false, false);
 
     // listen for new messages
-    //var_dump($rabbit_channel->callbacks);
-    //
-    //return;
-    while (count($rabbit_channel->callbacks)) {
-        $rabbit_channel->wait(null, true);
-        echo 1;
-        if (time() > $end_time) {
-            break;
-        }
-    }
+    $bunny_connection->run($time_limit);
 
     // close channel and connection
-    $rabbit_channel->close();
-    $rabbit_connection->close();
+    $bunny_channel->close();
+    $bunny_connection->disconnect();
 
     // write log which shows that process stops
     Info::push(_('Sender stop').' ('.$sender_hash.')');

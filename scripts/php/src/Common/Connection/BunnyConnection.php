@@ -2,11 +2,11 @@
 
     namespace Common\Connection;
 
+    use Bunny\Client;
     use Config\ConnectionConfig;
     use Exception;
-    use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-    class RabbitConnection extends Connection
+    class BunnyConnection extends Connection
     {
 
         private static $instances = array();
@@ -18,7 +18,7 @@
 
             $conn_params = $db_config->$db_config_name;
 
-            $this->connection = new AMQPStreamConnection($conn_params['host'], $conn_params['port'], $conn_params['user'], $conn_params['password']);
+            $this->connection = new Client($conn_params);
 
         }
 
@@ -29,7 +29,7 @@
         public function __wakeup()
         {
 
-            throw new Exception("Cannot unserialize singleton");
+            throw new Exception('Cannot unserialize singleton');
         }
 
         /**
