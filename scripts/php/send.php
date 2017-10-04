@@ -1,11 +1,9 @@
 <?php
 
     use Bunny\Channel;
-    use Bunny\Client;
     use Bunny\Message;
     use Common\Connection\BunnyConnection;
     use Config\SenderConfig;
-    use PhpAmqpLib\Message\AMQPMessage;
     use Sender4you\Log\Error;
     use Sender4you\Log\Info;
     use Sender4you\Sender\ContentProcessor;
