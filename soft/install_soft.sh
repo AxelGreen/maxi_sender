@@ -32,7 +32,13 @@ fi
 apt-get update
 apt-get install -y fail2ban htop
 apt-get install -y postgresql-9.6 erlang erlang-nox rabbitmq-server exim4
-apt-get install -y --allow-unauthenticated php7.0 php7.0-opcache php7.0-mbstring php7.0-bcmath php7.0-zip php7.0-geoip php7.0-curl php7.0-json php7.0-pgsql php7.0-cli
+#apt-get install -y --allow-unauthenticated php7.0 php7.0-opcache php7.0-mbstring php7.0-bcmath php7.0-zip php7.0-geoip php7.0-curl php7.0-json php7.0-pgsql php7.0-cli
+
+
+#apt-get install -y --allow-unauthenticated php7.2 php7.2-opcache php7.2-mbstring php7.2-bcmath php7.2-zip php7.2-geoip php7.2-curl php7.2-json php7.2-pgsql php7.2-cli
+#apt-get install -y --allow-unauthenticated php-pear
+#apt-get install libcurl3-openssl-dev
+
 
 # composer
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
