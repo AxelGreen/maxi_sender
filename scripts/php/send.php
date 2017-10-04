@@ -101,11 +101,12 @@
     $rabbit_channel->basic_consume($sender_settings->local_rabbit['queue_name'], '', false, false, false, false, $callback);
 
     // listen for new messages
-    var_dump($rabbit_channel->callbacks);
-
-    return;
+    //var_dump($rabbit_channel->callbacks);
+    //
+    //return;
     while (count($rabbit_channel->callbacks)) {
-        $rabbit_channel->wait();
+        $rabbit_channel->wait(null, true);
+        echo 1;
         if (time() > $end_time) {
             break;
         }

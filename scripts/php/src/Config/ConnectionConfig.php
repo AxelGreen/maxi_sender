@@ -7,7 +7,7 @@
     class ConnectionConfig extends Singleton
     {
 
-        public /** @noinspection SpellCheckingInspection */
+        public
             $postgresql
             = array(
             'host'     => 'localhost',
@@ -24,14 +24,14 @@
                 'password' => 'guest'
             );
 
-        // TODO: change remote connection params
-        public $rabbit_remote
+        public
+            $bunny_remote
             = array(
-                'host'     => 'localhost',
-                'port'     => 5672,
-                'user'     => 'guest',
-                'password' => 'guest'
-            );
+            'host'     => '88.99.195.32',
+            'vhost'    => '/',
+            'user'     => 'poolManager',
+            'password' => 'Z2fKlNw2ossS1y5O'
+        );
 
         public $sender4you_api
             = array(
