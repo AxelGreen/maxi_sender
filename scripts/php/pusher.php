@@ -10,15 +10,7 @@
     // sender config
     $sender_settings = SenderConfig::getInstance();
 
-    $memcache = new Memcache();
-    $memcache->connect('127.0.0.1', 11211);
-
-    /**
-     * @var AMQPStreamConnection $rabbit_connection
-     */
-    $rabbit_connection = $memcache->get('rabbit');
-
-    //$rabbit_connection = RabbitConnection::getInstance($sender_settings->local_rabbit['connection_name'])->getConnection();
+    $rabbit_connection = RabbitConnection::getInstance($sender_settings->local_rabbit['connection_name'])->getConnection();
     $rabbit_channel = $rabbit_connection->channel();
 
     $rabbit_channel->queue_declare($sender_settings->local_rabbit['queue_name'], false, true, false, false);
@@ -38,5 +30,5 @@
 
     echo('Message send'.PHP_EOL);
 
-    //$rabbit_channel->close();
-    //$rabbit_connection->close();
+    $rabbit_channel->close();
+    $rabbit_connection->close();
