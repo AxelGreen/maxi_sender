@@ -28,8 +28,9 @@
     // timestamp when script must stop processing and exit. One last message will be processed until exit
     $time_limit = $sender_settings->time_to_live + (rand(1, 60) * 60);
 
-    // connect to Rabbit
+    // connect to Bunny
     $bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
+    $bunny_connection->connect();
     $bunny_channel = $bunny_connection->channel();
 
     // declare queue
