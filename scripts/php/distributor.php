@@ -5,35 +5,7 @@
     use Common\Connection\BunnyConnection;
     use Config\SenderConfig;
 
-    //$connection = [
-    //    'host'     => '88.99.195.32',
-    //    'vhost'    => '/',
-    //    'user'     => 'poolManager',
-    //    'password' => 'Z2fKlNw2ossS1y5O'
-    //];
-    //
-    //// sender config
-    //$sender_settings = SenderConfig::getInstance();
-    //
-    //$bunny = new Client($connection);
-    //$bunny->connect();
-    //
-    //$channel = $bunny->channel();
-    //$channel->queueDeclare('pool.311.1', false, true, false, false);
-    //$channel->queueDeclare('pool.311.4', false, true, false, false);
-    //
-    //$message = $channel->get('pool.311.1');
-    //if ($message) {
-    //    var_dump($message);
-    //    $channel->ack($message);
-    //}
-    //
-    //$message = $channel->get('pool.311.4');
-    //var_dump($message);
-    //$channel->ack($message);
-    //
-    //$channel->close();
-    //$bunny->disconnect();
+
 
     // sender config
     $sender_settings = SenderConfig::getInstance();
@@ -65,3 +37,51 @@
 
     $local_bunny_channel->close();
     $local_bunny_connection->disconnect();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //$connection = [
+    //    'host'     => '88.99.195.32',
+    //    'vhost'    => '/',
+    //    'user'     => 'poolManager',
+    //    'password' => 'Z2fKlNw2ossS1y5O'
+    //];
+    //
+    //// sender config
+    //$sender_settings = SenderConfig::getInstance();
+    //
+    //$bunny = new Client($connection);
+    //$bunny->connect();
+    //
+    //$channel = $bunny->channel();
+    //$channel->queueDeclare('pool.311.1', false, true, false, false);
+    //$channel->queueDeclare('pool.311.4', false, true, false, false);
+    //
+    //$message = $channel->get('pool.311.1');
+    //if ($message) {
+    //    var_dump($message);
+    //    $channel->ack($message);
+    //}
+    //
+    //$message = $channel->get('pool.311.4');
+    //var_dump($message);
+    //$channel->ack($message);
+    //
+    //$channel->close();
+    //$bunny->disconnect();
