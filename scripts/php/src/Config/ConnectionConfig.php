@@ -26,11 +26,10 @@
 
         public $bunny_remote
             = array(
-                'host'      => '88.99.195.32',
-                'vhost'     => '/',
-                'user'      => 'distributor.311',
-                'password'  => 'Z2fKlNw2ossS1y5O',
-                'heartbeat' => 3000
+                'host'     => '88.99.195.32',
+                'vhost'    => '/',
+                'user'     => 'distributor.311',
+                'password' => 'Z2fKlNw2ossS1y5O'
             );
 
         public $sender4you_api

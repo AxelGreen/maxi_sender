@@ -2,6 +2,7 @@
 
     require_once __DIR__.'/vendor/autoload.php';
 
+    use Bunny\Exception\ClientException;
     use Common\Connection\BunnyConnection;
     use Config\SenderConfig;
     use Sender4you\Distributor\BigBuffer;
@@ -19,6 +20,9 @@
 
         // sender config
         $settings = SenderConfig::getInstance();
+
+        // time when distributor will exit
+        $reload_time = strtotime($settings->distributor_lifetime);
 
         // TODO: set it while installation process
         $owner_user_id = 311;
@@ -52,7 +56,13 @@
         $declared_queues = array(); // array of queues declared for Bigs with their names. Key is Big.id, value - queue name
         $current_time = null; // holds microtime(true) result for this iteration
 
+        // continuously wait for new messages
         while (true) {
+
+            $current_time = microtime(true);
+            if ($reload_time < $current_time) {
+                break;
+            }
 
             // update hosts
             $hosts = $hosts_buffer->getHosts();
@@ -91,7 +101,6 @@
             $big_id = $processing_key_parts[1] * 1;
 
             // calculate how much time left to try to get next letter for this Big
-            $current_time = microtime(true);
             $time_left = $big_delays[$processing_key] - $current_time;
             if ($time_left < 0) { // time already past? we need to send immediately
                 $time_left = 0;
@@ -105,10 +114,22 @@
             // check if queue for this Big declared already
             if (empty($declared_queues[$big_id])) { // need to declare queue to be sure that it exist, if already exist - won't be created
                 $declared_queues[$big_id] = $settings->remote_bunny['queue_prefix'].$owner_user_id.'.'.$big_id;
-                $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
+                try {
+                    $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
+                } catch (ClientException $ex) {
+                    $remote_bunny_connection->connect();
+                    $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
+                }
             }
             // get next letter for this Big
-            $message = $remote_bunny_channel->get($declared_queues[$big_id]);
+            try {
+                $message = $remote_bunny_channel->get($declared_queues[$big_id]);
+            } catch (ClientException $ex) {
+                $remote_bunny_connection->connect();
+                $message = $remote_bunny_channel->get($declared_queues[$big_id]);
+            }
+
+
             if (empty($message)) { // message is empty, delay send for this big for distributor_delay
                 $big_delays[$processing_key] = $current_time + $settings->distributor_delay;
                 continue;

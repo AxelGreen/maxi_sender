@@ -45,4 +45,6 @@
         // default amount of seconds to wait for Big which don't get any new messages
         public $distributor_delay = 30;
 
+        public $distributor_lifetime = '6 hours';
+
     }
