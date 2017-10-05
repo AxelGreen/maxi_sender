@@ -258,18 +258,20 @@
                 $shortcodes['client_phone'] = $pool['data']['p'];
             }
 
-            foreach ($template['shortcodes'] as $shortcode => $values) {
-                // no values for this shortcode
-                if (empty($values)) {
-                    continue;
-                }
+            if ( !empty($template['shortcodes'])) {
+                foreach ($template['shortcodes'] as $shortcode => $values) {
+                    // no values for this shortcode
+                    if (empty($values)) {
+                        continue;
+                    }
 
-                // don't rewrite previously set shortcode value - protect default shortcodes
-                if (isset($shortcodes[$shortcode])) {
-                    continue;
-                }
+                    // don't rewrite previously set shortcode value - protect default shortcodes
+                    if (isset($shortcodes[$shortcode])) {
+                        continue;
+                    }
 
-                $shortcodes[$shortcode] = $values[array_rand($values)];
+                    $shortcodes[$shortcode] = $values[array_rand($values)];
+                }
             }
 
             return $shortcodes;

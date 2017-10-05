@@ -36,37 +36,63 @@
         $remote_bunny_connection->connect();
         $remote_bunny_channel = $remote_bunny_connection->channel();
 
-        // array of hosts connected to this VPS
+        // initialize buffers
         $hosts_buffer = HostBuffer::getInstance();
-        $hosts = $hosts_buffer->getHosts();
-        var_dump($hosts);
-        if (empty($hosts)) {
-            throw new Exception(_('Empty hosts'));
-        }
-
-        // array of bigs - key is big id, value is speed limit
         $bigs_buffer = BigBuffer::getInstance();
-        $big_speeds = $bigs_buffer->getBigs();
-        var_dump($big_speeds);
-        if (empty($big_speeds)) {
-            throw new Exception(_('Empty big speeds'));
-        }
-
-        // array of timestamps, where key is big id and value is timestamp when next letter for this big must be send. Initialized from big speeds
-        $big_delays = $big_speeds;
 
         // initialize variables
-        $big_id = null;
-        $time_left = null;
-        $declared_queues = array();
+        $hosts = array(); // array of hosts connected to this VPS
+        $big_speeds = array(); // array of bigs - key is big id, value is speed limit
+        $big_delays = array(); // array of timestamps, where key is big id and value is timestamp when next letter for this big must be send.
+        $processing_key = ''; // key of current processing. Combines Big.id and host index in it.
+        $processing_key_parts = array(); // hold parts of processing key after exploding
+        $big_id = null; // id of currently processed Big
+        $host_index = null; // index of currently processed host
+        $time_left = null; // time to wait until next send
+        $declared_queues = array(); // array of queues declared for Bigs with their names. Key is Big.id, value - queue name
+        $current_time = null; // holds microtime(true) result for this iteration
 
         while (true) {
 
-            // get key (Big.id) of first element of $big_delays - letter for this Big must be send earlier then all another
-            $big_id = array_keys($big_delays)[0];
+            // update hosts
+            $hosts = $hosts_buffer->getHosts();
+            if (empty($hosts)) {
+                throw new Exception(_('Empty hosts'));
+            }
+
+            // update Big speeds
+            $big_speeds = $bigs_buffer->getBigs();
+            if (empty($big_speeds)) {
+                throw new Exception(_('Empty big speeds'));
+            }
+
+            // update big_delays
+            foreach ($hosts as $key => $host) {
+                foreach ($big_speeds as $big_id => $speed_limit) {
+                    $next_key = $key.'.'.$big_id;
+                    if (isset($big_delays[$next_key])) {
+                        continue;
+                    }
+                    $big_delays[$next_key] = 0;
+                }
+            }
+            asort($big_delays);
+
+            // get next processing key
+            $processing_key = array_keys($big_delays)[0];
+
+            // explode key to parts to retrieve host index and big id
+            $processing_key_parts = explode('.', $processing_key);
+
+            // get host index of first element of $big_delays - host which use to send this letter
+            $host_index = $processing_key_parts[0] * 1;
+
+            // get Big.id of first element of $big_delays - letter for this Big must be send earlier then all another
+            $big_id = $processing_key_parts[1] * 1;
 
             // calculate how much time left to try to get next letter for this Big
-            $time_left = $big_delays[$big_id] - microtime(true);
+            $current_time = microtime(true);
+            $time_left = $big_delays[$processing_key] - $current_time;
             if ($time_left < 0) { // time already past? we need to send immediately
                 $time_left = 0;
             }
@@ -80,14 +106,42 @@
             if (empty($declared_queues[$big_id])) { // need to declare queue to be sure that it exist, if already exist - won't be created
                 $declared_queues[$big_id] = $settings->remote_bunny['queue_prefix'].$owner_user_id.'.'.$big_id;
                 $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
-                var_dump('declare queue: '.$big_id);
             }
             // get next letter for this Big
             $message = $remote_bunny_channel->get($declared_queues[$big_id]);
-            var_dump($message);
+            if (empty($message)) { // message is empty, delay send for this big for distributor_delay
+                $big_delays[$processing_key] = $current_time + $settings->distributor_delay;
+                continue;
+            }
 
+            // decode message data
+            $data = json_decode($message->content, true);
+            // add host to data
+            $data['h'] = $hosts[$host_index];
+            // get task_id from message routingKey
+            $task_id = explode('.', $message->routingKey);
+            $task_id = array_pop($task_id) * 1;
+            $data['t'] = $task_id;
+            var_dump($big_id.' : '.$data['e']);
 
-            break;
+            // encode data to send to local bunny
+            $data = json_encode($data, JSON_HEX_QUOT);
+
+            // push to local bunny
+            $local_bunny_channel->publish($data,
+                array(
+                    'delivery-mode' => 2
+                ),
+                '',
+                $settings->local_bunny['queue_name']);
+
+            // acknowledge remote message
+            $remote_bunny_channel->ack($message);
+
+            // update big_delays
+            $big_delays[$processing_key] = $current_time + (60 / $big_speeds[$big_id]);
+
+            //break;
 
         }
 
@@ -109,11 +163,7 @@
 
     }
 
-
-
     return;
-
-
 
     $new_pool = array(
         't' => 44,

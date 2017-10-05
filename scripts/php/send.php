@@ -46,7 +46,7 @@
 
                 // check required params
                 if (empty($pool['t']) || empty($pool['e']) || empty($pool['i']) || empty($pool['h'])) {
-                    throw new Exception(_('Some of Pool params is empty'));
+                    throw new Exception(_('Some of Pool params is empty. '.json_encode($pool, JSON_HEX_QUOT)));
                 }
                 $pool = array(
                     'task_id'  => $pool['t'],

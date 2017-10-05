@@ -29,7 +29,7 @@
             = array(
             'host'     => '88.99.195.32',
             'vhost'    => '/',
-            'user'     => 'poolManager',
+            'user'     => 'distributor.311',
             'password' => 'Z2fKlNw2ossS1y5O'
         );
 

@@ -42,4 +42,7 @@
                 'distributor_error' => '/var/log/sender4you/distributor.error.log',
             );
 
+        // default amount of seconds to wait for Big which don't get any new messages
+        public $distributor_delay = 30;
+
     }
