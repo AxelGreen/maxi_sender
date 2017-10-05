@@ -9,7 +9,6 @@ if [ $SENDERS_COUNT -ge $MAX_COUNT ]; then
 fi
 # count number of new senders
 NEW_SENDERS=$((MAX_COUNT - SENDERS_COUNT))
-echo "$NEW_SENDERS"
 
 for (( i=1; i<=$NEW_SENDERS; i++))
 do
