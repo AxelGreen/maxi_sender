@@ -33,11 +33,18 @@
         $hosts_buffer = HostBuffer::getInstance();
         $hosts = $hosts_buffer->getHosts();
         var_dump($hosts);
+        if (empty($hosts)) {
+            throw new Exception(_('Empty hosts'));
+        }
 
         // array of bigs - key is big id, value is speed limit
         $bigs_buffer = BigBuffer::getInstance();
         $big_speeds = $bigs_buffer->getBigs();
         var_dump($big_speeds);
+        if (empty($big_speeds)) {
+            throw new Exception(_('Empty big speeds'));
+        }
+
 
         while (true) {
 
