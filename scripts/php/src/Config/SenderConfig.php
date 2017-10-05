@@ -21,7 +21,8 @@
          */
         public $remote_bunny
             = array(
-                'connection_name' => 'bunny_remote'
+                'connection_name' => 'bunny_remote',
+                'queue_prefix'    => 'pool.'
             );
 
         /**

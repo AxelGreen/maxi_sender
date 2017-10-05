@@ -17,25 +17,24 @@
         // write log which shows that process starts
         Info::push(_('Distributor start').' ('.$sender_hash.')', 'distributor');
 
-
         // sender config
-        $sender_settings = SenderConfig::getInstance();
+        $settings = SenderConfig::getInstance();
+
+        // TODO: set it while installation process
+        $owner_user_id = 311;
 
         // connect
         // local
-        $local_bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
+        $local_bunny_connection = BunnyConnection::getInstance($settings->local_bunny['connection_name'])->getConnection();
         $local_bunny_connection->connect();
         $local_bunny_channel = $local_bunny_connection->channel();
         // declare
-        $local_bunny_channel->queueDeclare($sender_settings->local_bunny['queue_name'], false, true, false, false);
+        $local_bunny_channel->queueDeclare($settings->local_bunny['queue_name'], false, true, false, false);
 
         // remote
-        $remote_bunny_connection = BunnyConnection::getInstance($sender_settings->remote_bunny['connection_name'])->getConnection();
+        $remote_bunny_connection = BunnyConnection::getInstance($settings->remote_bunny['connection_name'])->getConnection();
         $remote_bunny_connection->connect();
         $remote_bunny_channel = $remote_bunny_connection->channel();
-
-        // array of timestamps, where key is big id and value is timestamp when next letter for this big must be send
-        $big_delays = array();
 
         // array of hosts connected to this VPS
         $hosts_buffer = HostBuffer::getInstance();
@@ -53,12 +52,50 @@
             throw new Exception(_('Empty big speeds'));
         }
 
+        // array of timestamps, where key is big id and value is timestamp when next letter for this big must be send. Initialized from big speeds
+        $big_delays = $big_speeds;
+
+        // initialize variables
+        $big_id = null;
+        $time_left = null;
+        $declared_queues = array();
+
         while (true) {
+
+            // get key (Big.id) of first element of $big_delays - letter for this Big must be send earlier then all another
+            $big_id = array_keys($big_delays)[0];
+
+            // calculate how much time left to try to get next letter for this Big
+            $time_left = $big_delays[$big_id] - microtime(true);
+            if ($time_left < 0) { // time already past? we need to send immediately
+                $time_left = 0;
+            }
+
+            // TODO: check memcache, maybe this Big is blocked
+
+            // sleep until we need to get next next letter
+            usleep($time_left * 1000000);
+
+            // check if queue for this Big declared already
+            if (empty($declared_queues[$big_id])) { // need to declare queue to be sure that it exist, if already exist - won't be created
+                $declared_queues[$big_id] = $settings->remote_bunny['queue_prefix'].$owner_user_id.'.'.$big_id;
+                $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
+                var_dump('declare queue: '.$big_id);
+            }
+            // get next letter for this Big
+            $message = $remote_bunny_channel->get($declared_queues[$big_id]);
+            var_dump($message);
 
 
             break;
 
         }
+
+        // close connection and channels
+        $local_bunny_channel->close();
+        $local_bunny_connection->disconnect();
+        $remote_bunny_channel->close();
+        $remote_bunny_connection->disconnect();
 
         // write log which shows that process stops
         Info::push(_('Distributor stop').' ('.$sender_hash.')', 'distributor');
@@ -92,22 +129,9 @@
             'delivery-mode' => 2
         ),
         '',
-        $sender_settings->local_bunny['queue_name']);
+        $settings->local_bunny['queue_name']);
 
     echo('Message send'.PHP_EOL);
-
-    $local_bunny_channel->close();
-    $local_bunny_connection->disconnect();
-
-
-
-
-
-
-
-
-
-
 
 
 
