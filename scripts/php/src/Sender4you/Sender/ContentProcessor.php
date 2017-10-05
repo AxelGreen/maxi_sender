@@ -365,7 +365,31 @@
                                 $command = 'shuf -n '.$paragraphs_count.' '.$input_file;
                                 $lines = shell_exec($command);
                                 $lines = explode(PHP_EOL, $lines);
+
+                                // shuffle parts of string
+                                if (isset($shortcode_params[2])) {
+
+                                    $shuffle_types = array(
+                                        0 => '.',
+                                        1 => ' '
+                                    );
+
+                                    $current_delimiter = $shuffle_types[$shortcode_params[2] % count($shuffle_types)];
+                                    $lines = array_map(function ($line) use ($current_delimiter) {
+
+                                        $line_parts = explode($current_delimiter, $line);
+                                        shuffle($line_parts);
+                                        $line = implode($current_delimiter, $line_parts);
+
+                                        return $line;
+
+                                    },
+                                        $lines);
+
+                                }
+
                                 $lines = '<div>'.implode('</div><div>'.PHP_EOL, $lines).'</div>';
+
                                 return $lines;
 
                             }

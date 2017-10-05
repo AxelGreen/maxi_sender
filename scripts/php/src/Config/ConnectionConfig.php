@@ -21,7 +21,9 @@
                 'host'     => 'localhost',
                 'vhost'    => '/',
                 'user'     => 'guest',
-                'password' => 'guest'
+                'password' => 'guest',
+                // TODO: change to normal value when handle problem with connection recreating
+                //'heartbeat' => 30000
             );
 
         public $bunny_remote

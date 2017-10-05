@@ -169,7 +169,8 @@
                 Error::push($ex, 'distributor');
                 var_dump(3);
                 var_dump($ex->getMessage());
-                //$local_bunny_connection->connect();
+                $local_bunny_connection->disconnect();
+                $local_bunny_connection->connect();
                 $local_bunny_channel = $local_bunny_connection->channel();
                 $local_bunny_channel->publish($data,
                     array(
