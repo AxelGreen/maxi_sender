@@ -7,8 +7,16 @@
     use Sender4you\Distributor\BigBuffer;
     use Sender4you\Distributor\HostBuffer;
     use Sender4you\Log\Error;
+    use Sender4you\Log\Info;
 
     try {
+
+        // unique identifier for this process.
+        $sender_hash = sha1(microtime(true).rand());
+
+        // write log which shows that process starts
+        Info::push(_('Distributor start').' ('.$sender_hash.')', 'distributor');
+
 
         // sender config
         $sender_settings = SenderConfig::getInstance();
@@ -45,7 +53,6 @@
             throw new Exception(_('Empty big speeds'));
         }
 
-
         while (true) {
 
 
@@ -53,7 +60,12 @@
 
         }
 
+        // write log which shows that process stops
+        Info::push(_('Distributor stop').' ('.$sender_hash.')', 'distributor');
+
     } catch (Exception $ex) {
+
+        var_dump($ex->getMessage());
 
         // write error log
         Error::push($ex, 'distributor');
