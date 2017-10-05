@@ -1,6 +1,5 @@
 {
   "require": {
-    "mobiledetect/mobiledetectlib": "^2.8",
     "phpmailer/phpmailer": "~6.0",
     "bunny/bunny": "@dev"
   },

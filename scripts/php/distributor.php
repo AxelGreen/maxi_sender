@@ -4,18 +4,51 @@
 
     use Common\Connection\BunnyConnection;
     use Config\SenderConfig;
-
-
+    use Sender4you\Distributor\BigBuffer;
+    use Sender4you\Distributor\HostBuffer;
 
     // sender config
     $sender_settings = SenderConfig::getInstance();
 
     // connect
+    // local
     $local_bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
     $local_bunny_connection->connect();
     $local_bunny_channel = $local_bunny_connection->channel();
-
+    // declare
     $local_bunny_channel->queueDeclare($sender_settings->local_bunny['queue_name'], false, true, false, false);
+
+    // remote
+    $remote_bunny_connection = BunnyConnection::getInstance($sender_settings->remote_bunny['connection_name'])->getConnection();
+    $remote_bunny_connection->connect();
+    $remote_bunny_channel = $remote_bunny_connection->channel();
+
+    // array of timestamps, where key is big id and value is timestamp when next letter for this big must be send
+    $big_delays = array();
+
+    // array of hosts connected to this VPS
+    $hosts = array();
+    $hosts_buffer = HostBuffer::getInstance();
+
+    // array of bigs - key is big id, value is speed limit
+    $big_speeds = array();
+    $bigs_buffer = BigBuffer::getInstance();
+
+    while (true) {
+
+        $hosts = $hosts_buffer->getHosts();
+        var_dump($hosts);
+
+        $big_speeds = $bigs_buffer->getBigs();
+        var_dump($big_speeds);
+
+        break;
+
+    }
+
+    return;
+
+
 
     $new_pool = array(
         't' => 44,

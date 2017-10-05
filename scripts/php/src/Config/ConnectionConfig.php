@@ -40,7 +40,9 @@
                 'endpoints'      => array(
                     'template'        => 'template',
                     'redirectDomains' => 'redirectDomains',
-                    'ips'             => 'ips'
+                    'ips'             => 'ips',
+                    'hosts'           => 'hosts',
+                    'bigs'            => 'bigs'
                 )
             );
 
