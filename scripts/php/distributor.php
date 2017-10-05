@@ -121,8 +121,8 @@
                     Error::push($ex, 'distributor');
                     var_dump(1);
                     var_dump($ex->getMessage());
-                    $remote_bunny_connection->connect();
-                    //$remote_bunny_channel = $remote_bunny_connection->channel();
+                    //$remote_bunny_connection->connect();
+                    $remote_bunny_channel = $remote_bunny_connection->channel();
                     $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
                 }
             }
@@ -133,8 +133,8 @@
                 Error::push($ex, 'distributor');
                 var_dump(2);
                 var_dump($ex->getMessage());
-                $remote_bunny_connection->connect();
-                //$remote_bunny_channel = $remote_bunny_connection->channel();
+                //$remote_bunny_connection->connect();
+                $remote_bunny_channel = $remote_bunny_connection->channel();
                 $message = $remote_bunny_channel->get($declared_queues[$big_id]);
             }
 
@@ -169,7 +169,8 @@
                 Error::push($ex, 'distributor');
                 var_dump(3);
                 var_dump($ex->getMessage());
-                $local_bunny_connection->connect();
+                //$local_bunny_connection->connect();
+                $local_bunny_channel = $local_bunny_connection->channel();
                 $local_bunny_channel->publish($data,
                     array(
                         'delivery-mode' => 2
@@ -186,8 +187,8 @@
                 Error::push($ex, 'distributor');
                 var_dump(4);
                 var_dump($ex->getMessage());
-                $remote_bunny_connection->connect();
-                //$remote_bunny_channel = $remote_bunny_connection->channel();
+                //$remote_bunny_connection->connect();
+                $remote_bunny_channel = $remote_bunny_connection->channel();
                 $remote_bunny_channel->ack($message);
             }
 
