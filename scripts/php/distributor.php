@@ -157,66 +157,9 @@
     } catch (Exception $ex) {
 
         var_dump($ex->getMessage());
+        var_dump($ex->getLine());
 
         // write error log
         Error::push($ex, 'distributor');
 
     }
-
-    return;
-
-    $new_pool = array(
-        't' => 44,
-        'e' => 'axelgreenkp@gmail.com',
-        'i' => 134720871,
-        'd' => array(
-            'n' => 'Axel'
-        ),
-        'h' => 'albatross-pay.ru'
-    );
-    $local_bunny_channel->publish(json_encode($new_pool, JSON_HEX_QUOT),
-        array(
-            'delivery-mode' => 2
-        ),
-        '',
-        $settings->local_bunny['queue_name']);
-
-    echo('Message send'.PHP_EOL);
-
-
-
-
-
-
-
-
-
-    //$connection = [
-    //    'host'     => '88.99.195.32',
-    //    'vhost'    => '/',
-    //    'user'     => 'poolManager',
-    //    'password' => 'Z2fKlNw2ossS1y5O'
-    //];
-    //
-    //// sender config
-    //$sender_settings = SenderConfig::getInstance();
-    //
-    //$bunny = new Client($connection);
-    //$bunny->connect();
-    //
-    //$channel = $bunny->channel();
-    //$channel->queueDeclare('pool.311.1', false, true, false, false);
-    //$channel->queueDeclare('pool.311.4', false, true, false, false);
-    //
-    //$message = $channel->get('pool.311.1');
-    //if ($message) {
-    //    var_dump($message);
-    //    $channel->ack($message);
-    //}
-    //
-    //$message = $channel->get('pool.311.4');
-    //var_dump($message);
-    //$channel->ack($message);
-    //
-    //$channel->close();
-    //$bunny->disconnect();
