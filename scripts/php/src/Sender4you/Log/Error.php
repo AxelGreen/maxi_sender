@@ -8,14 +8,16 @@
     class Error
     {
 
-        public static function push(Exception $exception)
+        public static function push(Exception $exception, $source)
         {
+
+            $source .= '_error';
 
             // get sender settings
             $sender_settings = SenderConfig::getInstance();
 
             // filename from settings
-            $filename = $sender_settings->logs['error'];
+            $filename = $sender_settings->logs[$source];
 
             // generate log entry
             $error = array(

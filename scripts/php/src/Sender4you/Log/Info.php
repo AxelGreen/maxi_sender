@@ -8,14 +8,16 @@
     class Info
     {
 
-        public static function push(string $text)
+        public static function push(string $text, string $source)
         {
+
+            $source .= '_info';
 
             // get sender settings
             $sender_settings = SenderConfig::getInstance();
 
             // filename from settings
-            $filename = $sender_settings->logs['info'];
+            $filename = $sender_settings->logs[$source];
 
             // generate log entry
             $entry = array(

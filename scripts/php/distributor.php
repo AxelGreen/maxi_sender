@@ -6,45 +6,54 @@
     use Config\SenderConfig;
     use Sender4you\Distributor\BigBuffer;
     use Sender4you\Distributor\HostBuffer;
+    use Sender4you\Log\Error;
 
-    // sender config
-    $sender_settings = SenderConfig::getInstance();
+    try {
 
-    // connect
-    // local
-    $local_bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
-    $local_bunny_connection->connect();
-    $local_bunny_channel = $local_bunny_connection->channel();
-    // declare
-    $local_bunny_channel->queueDeclare($sender_settings->local_bunny['queue_name'], false, true, false, false);
+        // sender config
+        $sender_settings = SenderConfig::getInstance();
 
-    // remote
-    $remote_bunny_connection = BunnyConnection::getInstance($sender_settings->remote_bunny['connection_name'])->getConnection();
-    $remote_bunny_connection->connect();
-    $remote_bunny_channel = $remote_bunny_connection->channel();
+        // connect
+        // local
+        $local_bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
+        $local_bunny_connection->connect();
+        $local_bunny_channel = $local_bunny_connection->channel();
+        // declare
+        $local_bunny_channel->queueDeclare($sender_settings->local_bunny['queue_name'], false, true, false, false);
 
-    // array of timestamps, where key is big id and value is timestamp when next letter for this big must be send
-    $big_delays = array();
+        // remote
+        $remote_bunny_connection = BunnyConnection::getInstance($sender_settings->remote_bunny['connection_name'])->getConnection();
+        $remote_bunny_connection->connect();
+        $remote_bunny_channel = $remote_bunny_connection->channel();
 
-    // array of hosts connected to this VPS
-    $hosts = array();
-    $hosts_buffer = HostBuffer::getInstance();
+        // array of timestamps, where key is big id and value is timestamp when next letter for this big must be send
+        $big_delays = array();
 
-    // array of bigs - key is big id, value is speed limit
-    $big_speeds = array();
-    $bigs_buffer = BigBuffer::getInstance();
-
-    while (true) {
-
+        // array of hosts connected to this VPS
+        $hosts_buffer = HostBuffer::getInstance();
         $hosts = $hosts_buffer->getHosts();
         var_dump($hosts);
 
+        // array of bigs - key is big id, value is speed limit
+        $bigs_buffer = BigBuffer::getInstance();
         $big_speeds = $bigs_buffer->getBigs();
         var_dump($big_speeds);
 
-        break;
+        while (true) {
+
+
+            break;
+
+        }
+
+    } catch (Exception $ex) {
+
+        // write error log
+        Error::push($ex, 'distributor');
 
     }
+
+
 
     return;
 

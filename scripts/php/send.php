@@ -18,7 +18,7 @@
     $sender_hash = sha1(microtime(true).rand());
 
     // write log which shows that process starts
-    Info::push(_('Sender start').' ('.$sender_hash.')');
+    Info::push(_('Sender start').' ('.$sender_hash.')', 'sender');
 
     // sender config
     $sender_settings = SenderConfig::getInstance();
@@ -87,7 +87,7 @@
         } catch (Exception $ex) {
 
             // write error log
-            Error::push($ex);
+            Error::push($ex, 'sender');
 
         }
 
@@ -110,7 +110,7 @@
     $bunny_connection->disconnect();
 
     // write log which shows that process stops
-    Info::push(_('Sender stop').' ('.$sender_hash.')');
+    Info::push(_('Sender stop').' ('.$sender_hash.')', 'sender');
 
     // stop execution
     die();

@@ -35,8 +35,10 @@
          */
         public $logs
             = array(
-                'info'  => '/var/log/sender4you/sender_info.log',
-                'error' => '/var/log/sender4you/sender_error.log'
+                'sender_info'       => '/var/log/sender4you/sender.info.log',
+                'sender_error'      => '/var/log/sender4you/sender.error.log',
+                'distributor_info'  => '/var/log/sender4you/distributor.info.log',
+                'distributor_error' => '/var/log/sender4you/distributor.error.log',
             );
 
     }
