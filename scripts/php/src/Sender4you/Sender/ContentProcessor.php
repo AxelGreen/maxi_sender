@@ -369,12 +369,12 @@
                                 // shuffle parts of string
                                 if (isset($shortcode_params[2])) {
 
-                                    $shuffle_types = array(
-                                        0 => '.',
-                                        1 => ' '
+                                    $shuffle_delimiters = array(
+                                        0 => '.', // shuffle sentences
+                                        1 => ' ' // shuffle words
                                     );
 
-                                    $current_delimiter = $shuffle_types[$shortcode_params[2] % count($shuffle_types)];
+                                    $current_delimiter = $shuffle_delimiters[$shortcode_params[2] % count($shuffle_delimiters)];
                                     $lines = array_map(function ($line) use ($current_delimiter) {
 
                                         $line_parts = explode($current_delimiter, $line);
