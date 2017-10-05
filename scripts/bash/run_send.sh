@@ -3,7 +3,7 @@
 SENDERS_COUNT=$(pgrep --full --count "^php7\.0.*/etc/sender4you/send\.php$")
 MAX_COUNT=5
 
-# check if mutator already running
+# check if enough senders running right now
 if [ $SENDERS_COUNT -ge $MAX_COUNT ]; then
 	exit 1;
 fi
