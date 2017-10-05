@@ -1,6 +1,7 @@
 <?php
 
     use Sender4you\Configure\Exim;
+    use Sender4you\Configure\Php;
     use Sender4you\Configure\Postgres;
 
     require_once __DIR__.'/vendor/autoload.php';
@@ -18,6 +19,11 @@
         $postgres = new Postgres();
         // create table
         $postgres->run();
+
+        // php
+        $php = new Php();
+        // set owner_user_id
+        $php->run();
 
     } catch (Exception $exception) {
 

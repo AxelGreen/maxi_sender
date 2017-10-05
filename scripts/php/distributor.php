@@ -24,7 +24,6 @@
         // time when distributor will exit
         $reload_time = strtotime($settings->distributor_lifetime);
 
-        // TODO: set it while installation process
         $owner_user_id = 311;
 
         // connect
@@ -58,6 +57,8 @@
 
         // continuously wait for new messages
         while (true) {
+
+            $remote_bunny_channel = $remote_bunny_connection->channel();
 
             $current_time = microtime(true);
             if ($reload_time < $current_time) {
@@ -117,7 +118,11 @@
                 try {
                     $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
                 } catch (ClientException $ex) {
+                    Error::push($ex, 'distributor');
+                    var_dump(1);
+                    var_dump($ex->getMessage());
                     $remote_bunny_connection->connect();
+                    //$remote_bunny_channel = $remote_bunny_connection->channel();
                     $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
                 }
             }
@@ -125,7 +130,11 @@
             try {
                 $message = $remote_bunny_channel->get($declared_queues[$big_id]);
             } catch (ClientException $ex) {
+                Error::push($ex, 'distributor');
+                var_dump(2);
+                var_dump($ex->getMessage());
                 $remote_bunny_connection->connect();
+                //$remote_bunny_channel = $remote_bunny_connection->channel();
                 $message = $remote_bunny_channel->get($declared_queues[$big_id]);
             }
 
@@ -149,15 +158,39 @@
             $data = json_encode($data, JSON_HEX_QUOT);
 
             // push to local bunny
-            $local_bunny_channel->publish($data,
-                array(
-                    'delivery-mode' => 2
-                ),
-                '',
-                $settings->local_bunny['queue_name']);
+            try {
+                $local_bunny_channel->publish($data,
+                    array(
+                        'delivery-mode' => 2
+                    ),
+                    '',
+                    $settings->local_bunny['queue_name']);
+            } catch (Exception $ex) {
+                Error::push($ex, 'distributor');
+                var_dump(3);
+                var_dump($ex->getMessage());
+                $local_bunny_connection->connect();
+                $local_bunny_channel->publish($data,
+                    array(
+                        'delivery-mode' => 2
+                    ),
+                    '',
+                    $settings->local_bunny['queue_name']);
+
+            }
 
             // acknowledge remote message
-            $remote_bunny_channel->ack($message);
+            try {
+                $remote_bunny_channel->ack($message);
+            } catch (ClientException $ex) {
+                Error::push($ex, 'distributor');
+                var_dump(4);
+                var_dump($ex->getMessage());
+                $remote_bunny_connection->connect();
+                //$remote_bunny_channel = $remote_bunny_connection->channel();
+                $remote_bunny_channel->ack($message);
+            }
+
 
             // update big_delays
             $big_delays[$processing_key] = $current_time + (60 / $big_speeds[$big_id]);

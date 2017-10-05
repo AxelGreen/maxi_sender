@@ -41,7 +41,8 @@
                     'redirectDomains' => 'redirectDomains',
                     'ips'             => 'ips',
                     'hosts'           => 'hosts',
-                    'bigs'            => 'bigs'
+                    'bigs'            => 'bigs',
+                    'ownerId'         => 'ownerId'
                 )
             );
 
