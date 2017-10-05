@@ -38,7 +38,6 @@
         {
 
             $command = 'sed -i "s/^.*\$owner_user_id.*=.*$/\t\t\$owner_user_id = '.$id.';/" /etc/sender4you/distributor.php';
-            //var_dump($command);
             shell_exec($command);
 
         }
