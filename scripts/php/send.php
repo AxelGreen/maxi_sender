@@ -14,103 +14,112 @@
 
     require_once __DIR__.'/vendor/autoload.php';
 
-    // unique identifier for this process.
-    $sender_hash = sha1(microtime(true).rand());
+    try {
 
-    // write log which shows that process starts
-    Info::push(_('Sender start').' ('.$sender_hash.')', 'sender');
+        // unique identifier for this process.
+        $sender_hash = sha1(microtime(true).rand());
 
-    // sender config
-    $sender_settings = SenderConfig::getInstance();
+        // write log which shows that process starts
+        Info::push(_('Sender start').' ('.$sender_hash.')', 'sender');
 
-    // timestamp when script must stop processing and exit. One last message will be processed until exit
-    $time_limit = $sender_settings->time_to_live + (rand(1, 60) * 60);
+        // sender config
+        $sender_settings = SenderConfig::getInstance();
 
-    // connect to Bunny
-    $bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
-    $bunny_connection->connect();
-    $bunny_channel = $bunny_connection->channel();
+        // timestamp when script must stop processing and exit. One last message will be processed until exit
+        $time_limit = $sender_settings->time_to_live + (rand(1, 60) * 60);
 
-    // declare queue
-    $bunny_channel->queueDeclare($sender_settings->local_bunny['queue_name'], false, true, false, false);
+        // connect to Bunny
+        $bunny_connection = BunnyConnection::getInstance($sender_settings->local_bunny['connection_name'])->getConnection();
+        $bunny_connection->connect();
+        $bunny_channel = $bunny_connection->channel();
 
-    // callback to process messages
-    $callback = function (Message $message, Channel $channel) {
+        // declare queue
+        $bunny_channel->queueDeclare($sender_settings->local_bunny['queue_name'], false, true, false, false);
 
-        // decode message
-        $pool = json_decode($message->content, true);
+        // callback to process messages
+        $callback = function (Message $message, Channel $channel) {
 
-        try {
+            try {
 
-            // check required params
-            if (empty($pool['t']) || empty($pool['e']) || empty($pool['i']) || empty($pool['h'])) {
-                throw new Exception(_('Some of Pool params is empty'));
+                // decode message
+                $pool = json_decode($message->content, true);
+
+                // check required params
+                if (empty($pool['t']) || empty($pool['e']) || empty($pool['i']) || empty($pool['h'])) {
+                    throw new Exception(_('Some of Pool params is empty'));
+                }
+                $pool = array(
+                    'task_id'  => $pool['t'],
+                    'email'    => $pool['e'],
+                    'email_id' => $pool['i'],
+                    'data'     => $pool['d'],
+                    'host'     => $pool['h']
+                );
+
+                // get redirect domains
+                $settings_buffer = SettingsBuffer::getInstance();
+                $redirect_domains = $settings_buffer->getRedirectDomains();
+
+                // get Template
+                $templates_buffer = TemplateBuffer::getInstance();
+                $template = $templates_buffer->getTemplate($pool['task_id']);
+                if ($template === false) {
+                    throw new Exception(_('Can\'t retrieve TaskTemplate').' (task_id='.$pool['task_id'].')');
+                }
+
+                // process content
+                $content_processor = ContentProcessor::getInstance();
+                $process_status = $content_processor->set($pool, $template, $redirect_domains)->process();
+                if ($process_status === false) {
+                    throw new Exception(_('Can\'t generate Letter').' (task_id='.$pool['task_id'].'; email_id='.$pool['email_id'].')');
+                }
+                $letter = $content_processor->getLetter();
+                $content_processor->reset();
+
+                // process headers
+                $headers_processor = HeadersProcessor::getInstance();
+                $headers = $headers_processor->process($pool)->getHeaders();
+                $headers_processor->reset();
+
+                // send Letter
+                if (Sender::send($pool, $letter, $headers) === false) {
+                    throw new Exception(_('Can\'t send Letter').' (task_id='.$pool['task_id'].'; email_id='.$pool['email_id'].')');
+                }
+
+            } catch (Exception $ex) {
+
+                // write error log
+                Error::push($ex, 'sender');
+
             }
-            $pool = array(
-                'task_id'  => $pool['t'],
-                'email'    => $pool['e'],
-                'email_id' => $pool['i'],
-                'data'     => $pool['d'],
-                'host'     => $pool['h']
-            );
 
-            // get redirect domains
-            $settings_buffer = SettingsBuffer::getInstance();
-            $redirect_domains = $settings_buffer->getRedirectDomains();
+            // acknowledge message processing
+            $channel->ack($message);
 
-            // get Template
-            $templates_buffer = TemplateBuffer::getInstance();
-            $template = $templates_buffer->getTemplate($pool['task_id']);
-            if ($template === false) {
-                throw new Exception(_('Can\'t retrieve TaskTemplate').' (task_id='.$pool['task_id'].')');
-            }
+        };
 
-            // process content
-            $content_processor = ContentProcessor::getInstance();
-            $process_status = $content_processor->set($pool, $template, $redirect_domains)->process();
-            if ($process_status === false) {
-                throw new Exception(_('Can\'t generate Letter').' (task_id='.$pool['task_id'].'; email_id='.$pool['email_id'].')');
-            }
-            $letter = $content_processor->getLetter();
-            $content_processor->reset();
+        // process messages one by one. Allows get new task already after this is completed (disable Fair dispatch)
+        $bunny_channel->qos(0, 1, null);
 
-            // process headers
-            $headers_processor = HeadersProcessor::getInstance();
-            $headers = $headers_processor->process($pool)->getHeaders();
-            $headers_processor->reset();
+        // consume to queue
+        $bunny_channel->consume($callback, $sender_settings->local_bunny['queue_name'], '', false, false, false, false);
 
-            // send Letter
-            if (Sender::send($pool, $letter, $headers) === false) {
-                throw new Exception(_('Can\'t send Letter').' (task_id='.$pool['task_id'].'; email_id='.$pool['email_id'].')');
-            }
+        // listen for new messages
+        $bunny_connection->run($time_limit);
 
-        } catch (Exception $ex) {
+        // close channel and connection
+        $bunny_channel->close();
+        $bunny_connection->disconnect();
 
-            // write error log
-            Error::push($ex, 'sender');
+        // write log which shows that process stops
+        Info::push(_('Sender stop').' ('.$sender_hash.')', 'sender');
 
-        }
+    } catch (Exception $ex) {
 
-        // acknowledge message processing
-        $channel->ack($message);
+        // write error log
+        Error::push($ex, 'sender');
 
-    };
-
-    // process messages one by one. Allows get new task already after this is completed (disable Fair dispatch)
-    $bunny_channel->qos(0, 1, null);
-
-    // consume to queue
-    $bunny_channel->consume($callback, $sender_settings->local_bunny['queue_name'], '', false, false, false, false);
-
-    // listen for new messages
-    $bunny_connection->run($time_limit);
-
-    // close channel and connection
-    $bunny_channel->close();
-    $bunny_connection->disconnect();
-
-    // write log which shows that process stops
-    Info::push(_('Sender stop').' ('.$sender_hash.')', 'sender');
+    }
 
     // stop execution
     die();
