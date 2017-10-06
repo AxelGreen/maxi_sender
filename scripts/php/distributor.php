@@ -65,7 +65,6 @@
             // check if server active in pool - check variable in memcache
             $active_in_pool = $memcached->get($settings->memcached_pool_param);
             $active_in_pool *= 1;
-            var_dump($active_in_pool);
             if ($active_in_pool === 0) {
                 break;
             }
@@ -143,7 +142,6 @@
                 Error::push($ex, 'distributor');
             }
 
-
             if (empty($message)) { // message is empty, delay send for this big for distributor_delay
                 $big_delays[$processing_key] = $current_time + $settings->distributor_delay;
                 continue;
@@ -181,7 +179,6 @@
                 var_dump(4);
                 Error::push($ex, 'distributor');
             }
-
 
             // update big_delays
             $big_delays[$processing_key] = $current_time + (60 / $big_speeds[$big_id]);
