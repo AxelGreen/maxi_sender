@@ -57,7 +57,7 @@ do
 		# make actions based on action flag
 		case "${BASH_REMATCH[3]}" in
 			"<=")
-				# exit if log_message not contains id - message_id - without it this is not our letter
+				# exit if log_message not contains id - message_id - without it  and "P=local" this is not our letter
 				if ! [[ ${LOG_MESSAGE} =~ $START_REGEX ]]
 				then
 					continue
@@ -67,7 +67,7 @@ do
 				HOST="'${BASH_REMATCH[2]}'"
 				;;
 			"==")
-				# exit if log_message not contains "R=dnslookup T=smtp defer" - not remote defer
+				# exit if log_message not contains "T=remote_smtp defer" - not remote defer
 				if ! [[ ${LOG_MESSAGE} =~ $DEFER_REGEX ]]
 				then
 					continue
