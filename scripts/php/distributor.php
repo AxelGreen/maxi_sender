@@ -58,6 +58,8 @@
         // continuously wait for new messages
         while (true) {
 
+            // check if server active in pool - check variable in memcache
+
             $current_time = microtime(true);
             if ($reload_time < $current_time) {
                 break;
