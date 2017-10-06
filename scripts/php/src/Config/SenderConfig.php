@@ -47,4 +47,6 @@
 
         public $distributor_lifetime = '+6 hours';
 
+        public $memcached_pool_param = 'active_in_pool';
+
     }

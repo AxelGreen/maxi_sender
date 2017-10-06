@@ -4,6 +4,7 @@
 
     use Bunny\Exception\ClientException;
     use Common\Connection\BunnyConnection;
+    use Common\Connection\MemcachedConnect;
     use Config\SenderConfig;
     use Sender4you\Distributor\BigBuffer;
     use Sender4you\Distributor\HostBuffer;
@@ -39,6 +40,9 @@
         $remote_bunny_connection->connect();
         $remote_bunny_channel = $remote_bunny_connection->channel();
 
+        // memcached
+        $memcached = MemcachedConnect::getInstance();
+
         // initialize buffers
         $hosts_buffer = HostBuffer::getInstance();
         $bigs_buffer = BigBuffer::getInstance();
@@ -59,6 +63,12 @@
         while (true) {
 
             // check if server active in pool - check variable in memcache
+            $active_in_pool = $memcached->get($settings->memcached_pool_param);
+            $active_in_pool *= 1;
+            var_dump($active_in_pool);
+            if ($active_in_pool === 0) {
+                break;
+            }
 
             $current_time = microtime(true);
             if ($reload_time < $current_time) {
