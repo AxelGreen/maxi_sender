@@ -5,9 +5,10 @@ OUTPUT="/etc/sender4you/bash/insert"
 
 # list of regex
 MAIN_REGEX="^(.{25}) (.{6}-.{6}-.{2}) (\*\*|<=|=>|==) (.*)$"
-START_REGEX=" id=([^@]+)@(.*)$"
-DEFER_REGEX="R=dnslookup T=smtp defer \((-*[0-9]+)\): (.*)$"
+START_REGEX=" P=local.*id=([^@]+)@(.*)$"
+DEFER_REGEX=" T=remote_smtp defer \((-*[0-9]+)\): (.*)$"
 SUCCESS_REGEX=" T=remote_smtp "
+BOUNCE_MAIN_REGEX=" T=remote_smtp "
 BOUNCE_REGEX=" F=<[^>]+>: (.*)$"
 
 # parts of query
@@ -83,11 +84,16 @@ do
 				ACTION="2"
 				;;
 			"**")
-				# exit if log_message contains F=<>: - local bounce message
-				if [[ ${LOG_MESSAGE} =~ $BOUNCE_REGEX ]]
+				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
+				if ! [[ ${LOG_MESSAGE} =~ $BOUNCE_MAIN_REGEX ]]
 				then
 					continue
 				fi
+				# exit if log_message contains F=<>: - local bounce message
+#				if [[ ${LOG_MESSAGE} =~ $BOUNCE_REGEX ]]
+#				then
+#					continue
+#				fi
 				ACTION="3"
 				ERROR="'$LOG_MESSAGE'"
 				;;
