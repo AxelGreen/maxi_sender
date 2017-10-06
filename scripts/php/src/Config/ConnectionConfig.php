@@ -44,7 +44,7 @@
                     'ips'             => 'ips',
                     'hosts'           => 'hosts',
                     'bigs'            => 'bigs',
-                    'ownerId'         => 'ownerId'
+                    'vps'             => 'vps'
                 )
             );
 

@@ -11,26 +11,28 @@
         public function run()
         {
 
-            $id = $this->retrieveOwnerUserId();
+            $vps = $this->retrieveVps();
 
-            if (empty($id)) {
+            if (empty($vps)) {
                 throw new Exception(_('Can\'t retrieve owner user id'));
             }
 
-            $this->setDistributorOwnerUserId($id);
+            $this->setDistributorOwnerUserId($vps['user_id']);
+
+            $this->changePoolState($vps['use']);
 
         }
 
-        private function retrieveOwnerUserId() : int
+        private function retrieveVps() : array
         {
 
             // get connection
             $api_connection = MaxiApi::getInstance();
 
             // make request
-            $response = $api_connection->makeRequest('ownerId');
+            $response = $api_connection->makeRequest('vps');
 
-            return $response * 1;
+            return $response;
 
         }
 
@@ -38,6 +40,18 @@
         {
 
             $command = 'sed -i "s/^.*\$owner_user_id.*=.*$/\t\t\$owner_user_id = '.$id.';/" /etc/sender4you/distributor.php';
+            shell_exec($command);
+
+        }
+
+        private function changePoolState($state)
+        {
+
+            $command = '/etc/sender4you/bash/state_in_pool.sh';
+            if ($state === 't') {
+                $command .= ' 1';
+            }
+
             shell_exec($command);
 
         }
