@@ -21,6 +21,7 @@ echo Configuration
 ./config/fail2ban.sh
 ./config/rabbit.sh
 ./config/php.sh
+./config/memcached.sh
 
 echo Scripts
 # remove all scripts

@@ -6,5 +6,5 @@
     $cache->addServer('127.0.0.1', 11211);
 
     //$cache->set('test', 23423);
-    $data = $cache->get('test');
+    $data = $cache->get('active_in_pool') * 1;
     var_dump($data);
