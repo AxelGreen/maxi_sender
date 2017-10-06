@@ -5,10 +5,10 @@ OUTPUT="/etc/sender4you/bash/insert"
 
 # list of regex
 MAIN_REGEX="^(.{25}) (.{6}-.{6}-.{2}) (\*\*|<=|=>|==) (.*)$"
-START_REGEX=" P=local.*id=([^@]+)@(.*)$"
-DEFER_REGEX=" T=remote_smtp defer \((-*[0-9]+)\): (.*)$"
-SUCCESS_REGEX=" T=remote_smtp "
-BOUNCE_MAIN_REGEX=" T=remote_smtp "
+START_REGEX="P=local.*id=([^@]+)@(.*)$"
+DEFER_REGEX="T=remote_smtp.*defer \((-*[0-9]+)\): (.*)$"
+SUCCESS_REGEX="T=remote_smtp"
+BOUNCE_MAIN_REGEX="T=remote_smtp"
 BOUNCE_REGEX=" F=<[^>]+>: (.*)$"
 
 # parts of query
