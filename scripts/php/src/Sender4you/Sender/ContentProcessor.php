@@ -388,7 +388,7 @@
 
                                 }
 
-                                $lines = '<div>'.implode('</div><div>'.PHP_EOL, $lines).'</div>';
+                                $lines = implode('<br>'.PHP_EOL, $lines);
 
                                 return $lines;
 
