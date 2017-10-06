@@ -38,7 +38,7 @@ tail --max-unchanged-stats=5 --pid=$$ --silent --lines=0 --follow=name --sleep-i
 while read LINE
 do
 	# check if line satisfy main regex
-	if [[ $LINE =~ $MAIN_REGEX ]]
+	if [[ ${LINE} =~ $MAIN_REGEX ]]
 	then
 
 		# set date and exim_id
@@ -57,7 +57,7 @@ do
 		case "${BASH_REMATCH[3]}" in
 			"<=")
 				# exit if log_message not contains id - message_id - without it this is not our letter
-				if ! [[ $LOG_MESSAGE =~ $START_REGEX ]]
+				if ! [[ ${LOG_MESSAGE} =~ $START_REGEX ]]
 				then
 					continue
 				fi
@@ -67,7 +67,7 @@ do
 				;;
 			"==")
 				# exit if log_message not contains "R=dnslookup T=smtp defer" - not remote defer
-				if ! [[ $LOG_MESSAGE =~ $DEFER_REGEX ]]
+				if ! [[ ${LOG_MESSAGE} =~ $DEFER_REGEX ]]
 				then
 					continue
 				fi
@@ -76,7 +76,7 @@ do
 				;;
 			"=>")
 				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
-				if ! [[ $LOG_MESSAGE =~ $SUCCESS_REGEX ]]
+				if ! [[ ${LOG_MESSAGE} =~ $SUCCESS_REGEX ]]
 				then
 					continue
 				fi
@@ -84,12 +84,12 @@ do
 				;;
 			"**")
 				# exit if log_message contains F=<>: - local bounce message
-				if ! [[ $LOG_MESSAGE =~ $BOUNCE_REGEX ]]
+				if [[ ${LOG_MESSAGE} =~ $BOUNCE_REGEX ]]
 				then
 					continue
 				fi
 				ACTION="3"
-				ERROR="'${BASH_REMATCH[1],,}'"
+				ERROR="'$LOG_MESSAGE'"
 				;;
 		esac
 		# generate full query
