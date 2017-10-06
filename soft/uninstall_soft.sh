@@ -18,7 +18,7 @@ add-apt-repository --remove -y precise-pgdg
 add-apt-repository --remove -y testing
 
 # purge soft
-patterns=("erlang" "postgres" "php7" "rabbitmq" "exim" "fail2ban" "htop" "git" "memcached")
+patterns=("erlang" "postgres" "php7" "rabbitmq" "exim" "fail2ban" "htop" "git" "memcached" "netcat")
 for pattern in ${patterns[@]}; do
     apt-get --purge remove -y $(dpkg -l | grep ${pattern} | awk -F ' ' '{print $2}')
 done
