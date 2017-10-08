@@ -68,12 +68,13 @@ do
 				;;
 			"==")
 				# exit if log_message not contains "T=remote_smtp defer" - not remote defer
-				if ! [[ ${LOG_MESSAGE} =~ $DEFER_REGEX ]]
-				then
-					continue
-				fi
+#				if ! [[ ${LOG_MESSAGE} =~ $DEFER_REGEX ]]
+#				then
+#					continue
+#				fi
 				ACTION="1"
-				ERROR="'${BASH_REMATCH[1]}:${BASH_REMATCH[2],,}'"
+#				ERROR="'${BASH_REMATCH[1]}:${BASH_REMATCH[2],,}'"
+				ERROR="'$LOG_MESSAGE'"
 				;;
 			"=>")
 				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
@@ -85,10 +86,10 @@ do
 				;;
 			"**")
 				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
-				if ! [[ ${LOG_MESSAGE} =~ $BOUNCE_MAIN_REGEX ]]
-				then
-					continue
-				fi
+#				if ! [[ ${LOG_MESSAGE} =~ $BOUNCE_MAIN_REGEX ]]
+#				then
+#					continue
+#				fi
 				# exit if log_message contains F=<>: - local bounce message
 #				if [[ ${LOG_MESSAGE} =~ $BOUNCE_REGEX ]]
 #				then
