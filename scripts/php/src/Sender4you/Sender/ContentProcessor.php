@@ -598,7 +598,7 @@
             $subdomain = implode('u', $subdomain_params);
             $image_name = substr(sha1(time()), 0, 10).'.gif';
             $url = 'http://'.$subdomain.'.'.$redirect_domain.'/'.$image_name;
-            $pixel = '<div><img alt="'.$image_name.'" src="'.$url.'" style="height:1px;width:1px;"></div>';
+            $pixel = '<div style="color:#ffffff; background-color:#ffffff; font-size:1px;"><img alt="'.$image_name.'" src="'.$url.'" style="height:1px;width:1px;"></div>';
 
             return $pixel;
 
