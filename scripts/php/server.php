@@ -10,7 +10,7 @@
     // mail.ru postmaster check
     if (preg_match('%/mailru-verification([^\.]+)\.html%', $current_url, $rez)) {
 
-        echo 'verification: '.$rez[1];
+        echo 'mailru-verification: '.$rez[1];
 
     }
 
