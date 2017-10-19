@@ -10,4 +10,7 @@
 # run run_distributor.sh - start distributor.php to consume pools from central server and push it to local
 * * * * * /etc/sender4you/bash/run_distributor.sh >/dev/null 2>/var/log/sender4you/run_distributor.log
 
+# run run_distributor.sh - start server.php to server simple http request (index page and mail/ru postmaster)
+* * * * * /etc/sender4you/bash/run_server.sh >/dev/null 2>/var/log/sender4you/run_server.log
+
 # empty new line required, don't delete it
