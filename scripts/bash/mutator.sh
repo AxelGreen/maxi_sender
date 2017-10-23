@@ -63,7 +63,7 @@ do
 		DEFER="NULL"
 
 		# save full log message for further processing
-		LOG_MESSAGE="${BASH_REMATCH[4]}"
+		LOG_MESSAGE="${BASH_REMATCH[4]//\'/\'\'}"
 
 		# make actions based on action flag
 		case "${BASH_REMATCH[3]}" in
