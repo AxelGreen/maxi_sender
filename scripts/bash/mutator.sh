@@ -12,17 +12,27 @@ BOUNCE_MAIN_REGEX="T=remote_smtp"
 BOUNCE_REGEX=" F=<[^>]+>: (.*)$"
 
 # parts of query
-QUERY_START="INSERT INTO public.exim_logs (date, exim_id, action, message_id, host, error) VALUES "
-QUERY_END=" ON CONFLICT (exim_id) DO UPDATE SET date = excluded.date, action = excluded.action, error = excluded.error;"
+QUERY_START="INSERT INTO public.exim_logs (date, exim_id, action, message_id, host, error, defer) VALUES "
+QUERY_END="
+	ON CONFLICT (exim_id) DO UPDATE
+		SET date = excluded.date,
+			action = CASE WHEN (excluded.action = 1 AND public.exim_logs.action != 0) THEN public.exim_logs.action ELSE excluded.action END,
+			error = CASE
+				WHEN excluded.action = 1 THEN public.exim_logs.error
+				ELSE excluded.error END,
+			defer = CASE
+				WHEN excluded.action != 1 THEN public.exim_logs.defer
+				ELSE excluded.defer END;"
 QUERY=""
 
 # holds changeable part of query
 DATE=""
 EXIM_ID=""
 ACTION=""
-MESSAGE_ID=""
-HOST=""
-ERROR=""
+MESSAGE_ID="NULL"
+HOST="NULL"
+ERROR="NULL"
+DEFER="NULL"
 
 # log message
 LOG_MESSAGE=""
@@ -50,12 +60,14 @@ do
 		MESSAGE_ID="NULL"
 		HOST="NULL"
 		ERROR="NULL"
+		DEFER="NULL"
 
 		# save full log message for further processing
 		LOG_MESSAGE="${BASH_REMATCH[4]}"
 
 		# make actions based on action flag
 		case "${BASH_REMATCH[3]}" in
+			# send start
 			"<=")
 				# exit if log_message not contains id - message_id - without it  and "P=local" this is not our letter
 				if ! [[ ${LOG_MESSAGE} =~ $START_REGEX ]]
@@ -66,6 +78,7 @@ do
 				MESSAGE_ID="'${BASH_REMATCH[1]}'"
 				HOST="'${BASH_REMATCH[2]}'"
 				;;
+			# defer
 			"==")
 				# exit if log_message not contains "T=remote_smtp defer" - not remote defer
 #				if ! [[ ${LOG_MESSAGE} =~ $DEFER_REGEX ]]
@@ -73,9 +86,9 @@ do
 #					continue
 #				fi
 				ACTION="1"
-#				ERROR="'${BASH_REMATCH[1]}:${BASH_REMATCH[2],,}'"
-				ERROR="'$LOG_MESSAGE'"
+				DEFER="'$LOG_MESSAGE'"
 				;;
+			# success delivery
 			"=>")
 				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
 				if ! [[ ${LOG_MESSAGE} =~ $SUCCESS_REGEX ]]
@@ -84,6 +97,7 @@ do
 				fi
 				ACTION="2"
 				;;
+			# bounce
 			"**")
 				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
 #				if ! [[ ${LOG_MESSAGE} =~ $BOUNCE_MAIN_REGEX ]]
@@ -100,7 +114,7 @@ do
 				;;
 		esac
 		# generate full query
-		QUERY="$QUERY_START($DATE, $EXIM_ID, $ACTION, $MESSAGE_ID, $HOST, $ERROR)$QUERY_END"
+		QUERY="$QUERY_START($DATE, $EXIM_ID, $ACTION, $MESSAGE_ID, $HOST, $ERROR, $DEFER)$QUERY_END"
 		# push it to file
 		echo "$QUERY" >> "$OUTPUT"
 	fi

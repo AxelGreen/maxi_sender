@@ -28,7 +28,8 @@
                     action SMALLINT NOT NULL,
                     message_id VARCHAR NULL,
                     host VARCHAR NULL,
-                    error VARCHAR NULL
+                    error VARCHAR NULL,
+                    defer VARCHAR NULL
                 )
             ';
 
