@@ -8,6 +8,10 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# change hostname to localhost - Rabbit won't install and run without this
+hostname localhost
+echo "localhost" > /etc/hostname
+
 echo Soft installation
 # run deinstallation for all soft - to be sure that all is clear and new one
 ./soft/uninstall_soft.sh
