@@ -10,7 +10,7 @@
         public
             $postgresql
             = array(
-            'host'     => 'localhost',
+            'host'     => '127.0.0.1',
             'dbname'   => 'postgres',
             'user'     => 'postgres',
             'password' => ''
@@ -18,7 +18,7 @@
 
         public $bunny_local
             = array(
-                'host'      => 'localhost',
+                'host'      => '127.0.0.1',
                 'vhost'     => '/',
                 'user'      => 'guest',
                 'password'  => 'guest',

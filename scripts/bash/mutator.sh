@@ -6,8 +6,15 @@ OUTPUT="/etc/sender4you/bash/insert"
 # list of regex
 MAIN_REGEX="^(.{25}) (.{6}-.{6}-.{2}) (\*\*|<=|=>|==) (.*)$"
 START_REGEX="P=local.*id=([^@]+)@(.*)$"
-DEFER_REGEX="T=remote_smtp.*defer \((-*[0-9]+)\): (.*)$"
 SUCCESS_REGEX="T=remote_smtp"
+
+# variables for pause bounces
+PAUSE_REGEX=""
+PAUSE_UPDATE=0 # timestamp when need to refresh PAUSE_REGEX
+CURRENT_TIMESTAMP=0
+
+# temporary not used
+DEFER_REGEX="T=remote_smtp.*defer \((-*[0-9]+)\): (.*)$"
 BOUNCE_MAIN_REGEX="T=remote_smtp"
 BOUNCE_REGEX=" F=<[^>]+>: (.*)$"
 
@@ -111,6 +118,14 @@ do
 #				fi
 				ACTION="3"
 				ERROR="'$LOG_MESSAGE'"
+
+				# check maybe need to update PAUSE_REGEX
+				CURRENT_TIMESTAMP="$(date +%s)"
+				if [ $CURRENT_TIMESTAMP -ge $PAUSE_UPDATE ]; then
+					# update PAUSE_REGEX
+					PAUSE_UPDATE="$(wget --quiet -qO- http://api.sender4you.com/maxi/pauseRegex)"
+				fi
+
 				;;
 		esac
 		# generate full query
