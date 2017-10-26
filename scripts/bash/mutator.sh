@@ -123,7 +123,7 @@ do
 				CURRENT_TIMESTAMP="$(date +%s)"
 				if [ $CURRENT_TIMESTAMP -ge $PAUSE_UPDATE ]; then
 					# update PAUSE_REGEX
-					PAUSE_UPDATE="$(wget --quiet -qO- http://api.sender4you.com/maxi/pauseRegex)"
+					PAUSE_REGEX="$(wget --quiet -qO- http://api.sender4you.com/maxi/pauseRegex)"
 				fi
 
 				;;
