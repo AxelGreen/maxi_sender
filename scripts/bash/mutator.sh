@@ -133,7 +133,7 @@ do
 
 					if [ ${PAUSE_MATCH} -ge 1 ]; then
 						# this bounce is one of pause messages. Call PHP script to put it into memcache
-						php7.0 /etc/sender4you/pause.php "$LOG_MESSAGE"
+						php7.0 /etc/sender4you/pause.php "$EXIM_ID" "$LOG_MESSAGE"
 					fi
 
 				fi

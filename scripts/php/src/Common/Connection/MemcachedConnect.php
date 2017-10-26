@@ -55,4 +55,23 @@
 
         }
 
+        public function set(string $key, $value, int $expiration = null, $encode = true)
+        {
+
+            if (empty($key)) {
+                return false;
+            }
+
+            if (empty($value)) {
+                return false;
+            }
+
+            if ($encode === true) {
+                $value = json_encode($value, JSON_HEX_QUOT);
+            }
+
+            return $this->connection->set($key, $value, $expiration);
+
+        }
+
     }

@@ -51,4 +51,10 @@
 
         public $memcached_pool_param = 'active_in_pool';
 
+        public $memcached_bounce_limit
+            = array(
+                'param'      => 'bounce_limits', // key of Memcache param which holds bounce_limit data
+                'expiration' => 3600 // how long (in seconds) memcache will hold this value, after this time - retrieve data from central server one more time
+            );
+
     }

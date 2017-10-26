@@ -44,7 +44,8 @@
                     'ips'             => 'ips',
                     'hosts'           => 'hosts',
                     'bigs'            => 'bigs',
-                    'vps'             => 'vps'
+                    'vps'             => 'vps',
+                    'bounceLimits'    => 'bounceLimits'
                 )
             );
 

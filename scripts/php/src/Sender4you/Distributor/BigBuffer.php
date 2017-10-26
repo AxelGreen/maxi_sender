@@ -3,6 +3,8 @@
     namespace Sender4you\Distributor;
 
     use Common\Connection\MaxiApi;
+    use Common\Connection\MemcachedConnect;
+    use Config\SenderConfig;
     use Exception;
 
     class BigBuffer
@@ -103,6 +105,38 @@
             if ( !empty($response)) {
                 $this->bigs = $response;
             }
+
+        }
+
+        public function getBounceLimits()
+        {
+
+            $settings = SenderConfig::getInstance();
+            $memcached = MemcachedConnect::getInstance();
+
+            // try to get them from Memcache
+            $limits = $memcached->get($settings->memcached_bounce_limit['param']);
+            $limits = json_decode($limits, true);
+
+            if ( !empty($limits)) { // we have information in Memcache, so we don't need to get it from central server
+                return $limits;
+            }
+
+            // data is not set already or expired, retrieve new information from central server
+            // get connection
+            $api_connection = MaxiApi::getInstance();
+
+            // make request
+            $response = $api_connection->makeRequest('bounceLimits');
+
+            if (empty($response)) {
+                return array(); // we have no information, return empty array
+            }
+
+            // update memcache
+            $memcached->set($settings->memcached_bounce_limit['param'], $response, $settings->memcached_bounce_limit['expiration']);
+
+            return $response;
 
         }
 
