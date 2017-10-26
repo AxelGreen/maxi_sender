@@ -26,6 +26,9 @@
                 'exim_id' => $exim_id
             ));
         $sending_host = $log[0]['host'];
+        if (empty($sending_host)) {
+            return false;
+        }
 
         $bounce = $argv[2];
         if (empty($bounce)) { // no message supplied
@@ -67,7 +70,7 @@
         }
 
         // get previous bounces for this sending_host and Big
-
+        // TODO: complete
 
 
     } catch (Exception $ex) {
