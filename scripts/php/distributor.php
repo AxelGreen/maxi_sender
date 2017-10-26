@@ -138,7 +138,6 @@
             try {
                 $message = $remote_bunny_channel->get($declared_queues[$big_id]);
             } catch (ClientException $ex) {
-                var_dump(2);
                 Error::push($ex, 'distributor');
             }
 
@@ -168,7 +167,6 @@
                     '',
                     $settings->local_bunny['queue_name']);
             } catch (Exception $ex) {
-                var_dump(3);
                 Error::push($ex, 'distributor');
             }
 
@@ -176,7 +174,6 @@
             try {
                 $remote_bunny_channel->ack($message);
             } catch (ClientException $ex) {
-                var_dump(4);
                 Error::push($ex, 'distributor');
             }
 
@@ -195,9 +192,6 @@
         Info::push(_('Distributor stop').' ('.$sender_hash.')', 'distributor');
 
     } catch (Exception $ex) {
-
-        var_dump($ex->getMessage());
-        var_dump($ex->getLine());
 
         // write error log
         Error::push($ex, 'distributor');

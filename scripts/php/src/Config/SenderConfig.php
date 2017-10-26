@@ -40,6 +40,8 @@
                 'sender_error'      => '/var/log/sender4you/sender.error.log',
                 'distributor_info'  => '/var/log/sender4you/distributor.info.log',
                 'distributor_error' => '/var/log/sender4you/distributor.error.log',
+                'pause_info'        => '/var/log/sender4you/pause.info.log',
+                'pause_error'       => '/var/log/sender4you/pause.error.log',
             );
 
         // default amount of seconds to wait for Big which don't get any new messages

@@ -12,6 +12,7 @@ SUCCESS_REGEX="T=remote_smtp"
 PAUSE_REGEX=""
 PAUSE_UPDATE=0 # timestamp when need to refresh PAUSE_REGEX
 CURRENT_TIMESTAMP=0
+PAUSE_MATCH=0
 
 # temporary not used
 DEFER_REGEX="T=remote_smtp.*defer \((-*[0-9]+)\): (.*)$"
@@ -106,7 +107,7 @@ do
 				;;
 			# bounce
 			"**")
-				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
+#				# exit if log_message not contains T=remote_smtp - another transport was used so we not interested in this log
 #				if ! [[ ${LOG_MESSAGE} =~ $BOUNCE_MAIN_REGEX ]]
 #				then
 #					continue
@@ -121,9 +122,26 @@ do
 
 				# check maybe need to update PAUSE_REGEX
 				CURRENT_TIMESTAMP="$(date +%s)"
-				if [ $CURRENT_TIMESTAMP -ge $PAUSE_UPDATE ]; then
+				if [ ${CURRENT_TIMESTAMP} -ge ${PAUSE_UPDATE} ]; then
 					# update PAUSE_REGEX
 					PAUSE_REGEX="$(wget --quiet -qO- http://api.sender4you.com/maxi/pauseRegex)"
+					PAUSE_UPDATE="$(($(date +%s)+3600))"
+					echo "$PAUSE_UPDATE : $PAUSE_REGEX ||| "
+				fi
+
+				PAUSE_MATCH=0
+				# check if PAUSE_REGEX not empty
+				if [ ! -z "$PAUSE_REGEX" ]; then
+
+					# check this bounce message
+					PAUSE_MATCH=$(grep --ignore-case --count --extended-regexp "$PAUSE_REGEX" <<< ${LOG_MESSAGE})
+
+					if [ ${PAUSE_MATCH} -ge 1 ]; then
+						# this bounce is one of pause messages. Call PHP script to put it into memcache
+						# TODO: call php script
+						echo "$PAUSE_MATCH : $LOG_MESSAGE"
+					fi
+
 				fi
 
 				;;
