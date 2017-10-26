@@ -25,12 +25,8 @@ QUERY_END="
 	ON CONFLICT (exim_id) DO UPDATE
 		SET date = excluded.date,
 			action = CASE WHEN (excluded.action = 1 AND public.exim_logs.action != 0) THEN public.exim_logs.action ELSE excluded.action END,
-			error = CASE
-				WHEN excluded.action = 1 THEN public.exim_logs.error
-				ELSE excluded.error END,
-			defer = CASE
-				WHEN excluded.action != 1 THEN public.exim_logs.defer
-				ELSE excluded.defer END;"
+			error = CASE WHEN excluded.action = 1 THEN public.exim_logs.error ELSE excluded.error END,
+			defer = CASE WHEN excluded.action != 1 THEN public.exim_logs.defer ELSE excluded.defer END;"
 QUERY=""
 
 # holds changeable part of query
