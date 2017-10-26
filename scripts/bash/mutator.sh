@@ -126,7 +126,6 @@ do
 					# update PAUSE_REGEX
 					PAUSE_REGEX="$(wget --quiet -qO- http://api.sender4you.com/maxi/pauseRegex)"
 					PAUSE_UPDATE="$(($(date +%s)+3600))"
-					echo "$PAUSE_UPDATE : $PAUSE_REGEX ||| "
 				fi
 
 				PAUSE_MATCH=0
@@ -138,8 +137,7 @@ do
 
 					if [ ${PAUSE_MATCH} -ge 1 ]; then
 						# this bounce is one of pause messages. Call PHP script to put it into memcache
-						# TODO: call php script
-						echo "$PAUSE_MATCH : $LOG_MESSAGE"
+						php7.0 /etc/sender4you/pause.php "$LOG_MESSAGE"
 					fi
 
 				fi
