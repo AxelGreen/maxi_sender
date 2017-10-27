@@ -26,7 +26,7 @@
 
             $sending_host = '';
 
-            if (preg_match('%.{6}-.{6}-.{2}$%', $exim_id) === false) { // wrong exim id
+            if (preg_match('%^.{6}-.{6}-.{2}$%', $exim_id) === 0) { // wrong exim id
                 return $sending_host;
             }
 
