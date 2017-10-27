@@ -86,6 +86,8 @@
                     throw new Exception(_('Can\'t send Letter').' (task_id='.$pool['task_id'].'; email_id='.$pool['email_id'].')');
                 }
 
+                Info::push('message send: '.$message->content, 'sender');
+
             } catch (Exception $ex) {
 
                 // write error log
