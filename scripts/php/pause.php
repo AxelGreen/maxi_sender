@@ -16,7 +16,7 @@
         // validate exim_id and retrieve sending_host for this message from DB
         $sending_host = $helper->retrieveHost($argv[1]);
         if (empty($sending_host)) {
-            throw new Exception(_('Empty sending host '.json_encode($argv, JSON_HEX_QUOT)));
+            throw new Exception(_('Empty sending host').' '.json_encode($argv, JSON_HEX_QUOT));
         }
 
         // validate bounce and get email_domain
@@ -35,7 +35,8 @@
         // detect Big
         $big_id = $helper->detectBigId($email_domain, $bounce_limits);
         if (empty($big_id)) { // Big not detected
-            throw new Exception(_('Big not determined'));
+            throw new Exception(_('Big not determined').' '.json_encode($argv, JSON_HEX_QUOT));
+
         }
 
         // retrieve previous bounces from Memcache

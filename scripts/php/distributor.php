@@ -104,6 +104,7 @@
             // explode key to parts to retrieve host index and big id
             $processing_key_parts = explode('|||', $processing_key);
 
+
             // get host index of first element of $big_delays - host which use to send this letter
             $current_host = $processing_key_parts[0];
 
@@ -135,7 +136,6 @@
                 try {
                     $remote_bunny_channel->queueDeclare($declared_queues[$big_id], false, true, false, false);
                 } catch (ClientException $ex) {
-                    var_dump(1);
                     Error::push($ex, 'distributor');
                 }
             }
@@ -165,12 +165,15 @@
 
             // push to local bunny
             try {
+
                 $local_bunny_channel->publish($data,
                     array(
                         'delivery-mode' => 2
                     ),
                     '',
                     $settings->local_bunny['queue_name']);
+
+                //Info::push('message pushed: '.$data, 'distributor');
             } catch (Exception $ex) {
                 Error::push($ex, 'distributor');
             }
