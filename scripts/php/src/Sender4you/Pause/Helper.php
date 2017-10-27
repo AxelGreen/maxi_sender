@@ -41,7 +41,7 @@
                 array(
                     'exim_id' => $exim_id
                 ));
-            $sending_host = $log[0]['host'];
+            $sending_host = $log[0]['host'].'';
 
             return $sending_host;
 

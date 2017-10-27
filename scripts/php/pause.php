@@ -70,4 +70,9 @@
         // write error log
         Error::push($ex, 'pause');
 
+    } catch (\Error $ex) {
+
+        // write error log
+        Error::push($ex, 'pause');
+
     }

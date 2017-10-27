@@ -58,7 +58,7 @@ do
 
 		# set date and exim_id
 		DATE="'${BASH_REMATCH[1]}'"
-		EXIM_ID="'${BASH_REMATCH[2]}'"
+		EXIM_ID="${BASH_REMATCH[2]}"
 
 		# clear another variables
 		MESSAGE_ID="NULL"
@@ -141,7 +141,7 @@ do
 				;;
 		esac
 		# generate full query
-		QUERY="$QUERY_START($DATE, $EXIM_ID, $ACTION, $MESSAGE_ID, $HOST, $ERROR, $DEFER)$QUERY_END"
+		QUERY="$QUERY_START($DATE, '$EXIM_ID', $ACTION, $MESSAGE_ID, $HOST, $ERROR, $DEFER)$QUERY_END"
 		# push it to file
 		echo "$QUERY" >> "$OUTPUT"
 	fi
