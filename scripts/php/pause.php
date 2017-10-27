@@ -1,77 +1,64 @@
 <?php
 
-    use Common\Connection\PgConnection;
+    use Common\Connection\MemcachedConnect;
     use Sender4you\Distributor\BigBuffer;
     use Sender4you\Log\Error;
+    use Sender4you\Pause\Helper;
 
     require_once __DIR__.'/vendor/autoload.php';
 
     try {
 
+        // helper which holds all functions to process
+        $helper = new Helper();
 
-        $exim_id = $argv[1];
-        if (preg_match('%.{6}-.{6}-.{2}$%', $exim_id) === false) { // wrong exim id
-            return;
-        }
-
-        // retrieve this message from DB
-        $pg_conn = PgConnection::getInstance();
-        $query
-            = '
-            SELECT host FROM public.exim_logs
-              WHERE exim_id = $1
-        ';
-        $log = $pg_conn->query($query,
-            array(
-                'exim_id' => $exim_id
-            ));
-        $sending_host = $log[0]['host'];
+        // validate exim_id and retrieve sending_host for this message from DB
+        $sending_host = $helper->retrieveHost($argv[1]);
         if (empty($sending_host)) {
             return false;
         }
 
-        $bounce = $argv[2];
-        if (empty($bounce)) { // no message supplied
-            return;
+        // validate bounce and get email_domain
+        $email_domain = $helper->parseBounce($argv[2]);
+        if (empty($email_domain)) {
+            return false;
         }
 
-        $email = explode(' ', $bounce, 2);
-        $email = $email[0];
-
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) { // email not found
-            return;
-        }
-        $email_domain = explode('@', $email);
-        $email_domain = $email_domain[1];
-
+        // retrieve bounce_limits from Memcache or central server (if there is no local copy)
         $bigs_buffer = BigBuffer::getInstance();
         $bounce_limits = $bigs_buffer->getBounceLimits();
-
-        if (empty($bounce_limits)) { // no limits for pause
-            return;
+        if (empty($bounce_limits)) { // no data about limits, so can't process
+            return false;
         }
 
         // detect Big
-        $big = null;
-        foreach ($bounce_limits as $big_id => $big_data) {
-
-            if ($big_id <= 0) { // no pauses for not determined Bigs or tests
-                continue;
-            }
-
-            if (preg_match($big_data['pattern'], $email_domain)) {
-                $big = $big_id;
-            }
-
-        }
-
-        if ($big === null) { // Big not detected
+        $big_id = $helper->detectBigId($email_domain, $bounce_limits);
+        if (empty($big_id)) { // Big not detected
             return;
         }
 
-        // get previous bounces for this sending_host and Big
-        // TODO: complete
+        // retrieve previous bounces from Memcache
+        $previous_bounces = $helper->getPreviousBounces($sending_host, $big_id);
+        if ( !empty($previous_bounces)) {
+            $previous_bounces = $helper->filterPreviousBounces($previous_bounces);
+        }
 
+        // add new bounce
+        $previous_bounces[] = time();
+        // save previous_bounces to memcache
+        $helper->savePreviousBounces($sending_host, $big_id, $previous_bounces);
+
+        // check bounces limit
+        if (count($previous_bounces) < $bounce_limits[$big_id]['bounce_limit']) { // not enough bounces for pause
+            return true;
+        }
+
+        // save to memcache time when we can restore sending messages for this sender_host and big
+        $cache_key = $sending_host.'|||'.$big_id;
+        $memcached = MemcachedConnect::getInstance();
+        $restore_at = microtime(true) + ($bounce_limits[$big_id]['pause'] * 3600);
+        // save 1 to memcache with expiration time (when we can restore sending). So if this key is not set in memcache - we can continue to send this
+        $memcached->set($cache_key, $restore_at, $bounce_limits[$big_id]['pause'] * 3600, false);
 
     } catch (Exception $ex) {
 

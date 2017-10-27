@@ -55,6 +55,13 @@
             = array(
                 'param'      => 'bounce_limits', // key of Memcache param which holds bounce_limit data
                 'expiration' => 3600 // how long (in seconds) memcache will hold this value, after this time - retrieve data from central server one more time
+
+            );
+
+        public $pause_params
+            = array(
+                'previous'   => 'previous', // last part of Memcache key which holds previous bounces for this sending_host and Big
+                'expiration' => 3600 // how long (in seconds) pauses are counts (saved in memcache bounces older that this time won't be counted to determine if we need to do pause)
             );
 
     }

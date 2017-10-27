@@ -54,7 +54,7 @@
         $processing_key = ''; // key of current processing. Combines Big.id and host index in it.
         $processing_key_parts = array(); // hold parts of processing key after exploding
         $big_id = null; // id of currently processed Big
-        $host_index = null; // index of currently processed host
+        $current_host = null; // index of currently processed host
         $time_left = null; // time to wait until next send
         $declared_queues = array(); // array of queues declared for Bigs with their names. Key is Big.id, value - queue name
         $current_time = null; // holds microtime(true) result for this iteration
@@ -89,7 +89,7 @@
             // update big_delays
             foreach ($hosts as $key => $host) {
                 foreach ($big_speeds as $big_id => $speed_limit) {
-                    $next_key = $key.'.'.$big_id;
+                    $next_key = $host.'|||'.$big_id;
                     if (isset($big_delays[$next_key])) {
                         continue;
                     }
@@ -102,10 +102,10 @@
             $processing_key = array_keys($big_delays)[0];
 
             // explode key to parts to retrieve host index and big id
-            $processing_key_parts = explode('.', $processing_key);
+            $processing_key_parts = explode('|||', $processing_key);
 
             // get host index of first element of $big_delays - host which use to send this letter
-            $host_index = $processing_key_parts[0] * 1;
+            $current_host = $processing_key_parts[0];
 
             // get Big.id of first element of $big_delays - letter for this Big must be send earlier then all another
             $big_id = $processing_key_parts[1] * 1;
@@ -116,7 +116,12 @@
                 $time_left = 0;
             }
 
-            // TODO: check memcache, maybe this Big is blocked
+            $cache_key = $processing_key;
+            $delay = $memcached->get($cache_key);
+            if ( !empty($delay)) { // memcache key for this host and big is set, it meats that we need to pause sending of this big
+                $big_delays[$processing_key] = $delay;
+                continue;
+            }
 
             // sleep until we need to get next next letter
             usleep($time_left * 1000000);
@@ -149,7 +154,7 @@
             // decode message data
             $data = json_decode($message->content, true);
             // add host to data
-            $data['h'] = $hosts[$host_index];
+            $data['h'] = $current_host;
             // get task_id from message routingKey
             $task_id = explode('.', $message->routingKey);
             $task_id = array_pop($task_id) * 1;
