@@ -11,6 +11,7 @@
     use Common\Connection\MemcachedConnect;
     use Common\Connection\PgConnection;
     use Config\SenderConfig;
+    use Sender4you\Log\Info;
 
     /**
      * Class Helper
@@ -30,6 +31,16 @@
                 return $sending_host;
             }
 
+            // try to retrieve it from not inserted logs
+
+            $command = 'grep --only-matching --extended-regexp ", \''.$exim_id.'\', \'([^\']+)\'" /etc/sender4you/bash/insert | sed -n -r "s/.*\', \'([^\']+)\'.*/\1/p"';
+            $result = shell_exec($command);
+            if ($result !== null) {
+                $sending_host = trim($result);
+
+                return $sending_host;
+            }
+
             // retrieve this message from DB
             $query
                 = '
@@ -41,6 +52,10 @@
                 array(
                     'exim_id' => $exim_id
                 ));
+            if (empty($log)) {
+                return $sending_host;
+            }
+
             $sending_host = $log[0]['host'].'';
 
             return $sending_host;

@@ -20,7 +20,7 @@ BOUNCE_MAIN_REGEX="T=remote_smtp"
 BOUNCE_REGEX=" F=<[^>]+>: (.*)$"
 
 # parts of query
-QUERY_START="INSERT INTO public.exim_logs (date, exim_id, action, message_id, host, error, defer) VALUES "
+QUERY_START="INSERT INTO public.exim_logs (date, exim_id, host, action, message_id, error, defer) VALUES "
 QUERY_END="
 	ON CONFLICT (exim_id) DO UPDATE
 		SET date = excluded.date,
@@ -141,7 +141,7 @@ do
 				;;
 		esac
 		# generate full query
-		QUERY="$QUERY_START($DATE, '$EXIM_ID', $ACTION, $MESSAGE_ID, $HOST, $ERROR, $DEFER)$QUERY_END"
+		QUERY="$QUERY_START($DATE, '$EXIM_ID', $HOST, $ACTION, $MESSAGE_ID, $ERROR, $DEFER)$QUERY_END"
 		# push it to file
 		echo "$QUERY" >> "$OUTPUT"
 	fi

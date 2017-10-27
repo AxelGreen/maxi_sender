@@ -16,7 +16,7 @@
         // validate exim_id and retrieve sending_host for this message from DB
         $sending_host = $helper->retrieveHost($argv[1]);
         if (empty($sending_host)) {
-            throw new Exception(_('Empty sending host'));
+            throw new Exception(_('Empty sending host '.json_encode($argv, JSON_HEX_QUOT)));
         }
 
         // validate bounce and get email_domain
@@ -66,11 +66,6 @@
         Info::push(_('Pause for').' '.$sending_host.' big_id: '.$big_id.' '._('is set until').' '.$restore_at.' ('.date('Y-m-d H:i:s', $restore_at).')', 'pause');
 
     } catch (Exception $ex) {
-
-        // write error log
-        Error::push($ex, 'pause');
-
-    } catch (\Error $ex) {
 
         // write error log
         Error::push($ex, 'pause');
