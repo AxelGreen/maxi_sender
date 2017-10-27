@@ -173,7 +173,7 @@
                     '',
                     $settings->local_bunny['queue_name']);
 
-                Info::push('message pushed: '.$data, 'distributor');
+                //Info::push('message pushed: '.$data, 'distributor');
             } catch (Exception $ex) {
                 Error::push($ex, 'distributor');
             }
