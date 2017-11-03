@@ -36,7 +36,8 @@
             = array(
                 'fix_int'  => 1,
                 'fix_link' => 1,
-                'fix_text' => 1
+                'fix_text' => 1,
+                'fix_date' => 1,
             );
 
         /**
@@ -354,12 +355,12 @@
                             }
                                 break;
                             case 'fix_text': {
-                                $langs = array(
+                                $formats = array(
                                     0 => 'russian',
                                     1 => 'english'
                                 );
-                                $current_lang = $langs[$shortcode_params[1] % count($langs)];
-                                $input_file = '/etc/sender4you/assets/random_text_'.$current_lang;
+                                $current_format = $formats[$shortcode_params[1] % count($formats)];
+                                $input_file = '/etc/sender4you/assets/random_text_'.$current_format;
 
                                 $paragraphs_count = 5;
                                 $command = 'shuf -n '.$paragraphs_count.' '.$input_file;
@@ -391,6 +392,26 @@
                                 $lines = implode('<br>'.PHP_EOL, $lines);
 
                                 return $lines;
+
+                            }
+                            case 'fix_date': {
+                                $formats = array(
+                                    0  => 'd-m-Y',
+                                    1  => 'd-m-y',
+                                    2  => 'd/m/Y',
+                                    3  => 'd/m/y',
+                                    4  => 'm-d-Y',
+                                    5  => 'm-d-y',
+                                    6  => 'm/d/Y',
+                                    7  => 'm/d/y',
+                                    8  => 'Y-m-d',
+                                    9  => 'y-m-d',
+                                    10 => 'Y/m/d',
+                                    11 => 'y/m/d'
+                                );
+                                $current_format = $formats[$shortcode_params[1] % count($formats)];
+
+                                return date($current_format);
 
                             }
                         }
