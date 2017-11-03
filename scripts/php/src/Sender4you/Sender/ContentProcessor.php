@@ -394,6 +394,7 @@
                                 return $lines;
 
                             }
+                                break;
                             case 'fix_date': {
                                 $formats = array(
                                     0  => 'd-m-Y',
@@ -414,6 +415,7 @@
                                 return date($current_format);
 
                             }
+                                break;
                         }
 
                     }
