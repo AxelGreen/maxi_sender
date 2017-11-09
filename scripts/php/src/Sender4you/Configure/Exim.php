@@ -103,4 +103,16 @@
 
         }
 
+        public function getDomainsFile()
+        {
+
+            return $this->domains_file;
+        }
+
+        public function getDkimFilesFolder()
+        {
+
+            return $this->dkim_files_folder;
+        }
+
     }
