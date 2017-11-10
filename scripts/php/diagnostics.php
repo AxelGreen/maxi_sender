@@ -4,6 +4,7 @@
     use Sender4you\Diagnostics\Exim;
     use Sender4you\Diagnostics\Memcached;
     use Sender4you\Diagnostics\Postgres;
+    use Sender4you\Diagnostics\Bunny;
 
     require_once __DIR__.'/vendor/autoload.php';
 
@@ -23,8 +24,12 @@
     $memcached = new Memcached();
     $errors += $memcached->check()->fix()->check()->getErrors();
 
-    // memcached
+    // postgres
     $postgres = new Postgres();
     $errors += $postgres->check()->fix()->check()->getErrors();
+
+    // bunny
+    $bunny = new Bunny();
+    $errors += $bunny->check()->fix()->check()->getErrors();
 
     var_dump($errors);

@@ -7,14 +7,13 @@
     class ConnectionConfig extends Singleton
     {
 
-        public
-            $postgresql
+        public $postgresql
             = array(
-            'host'     => '127.0.0.1',
-            'dbname'   => 'postgres',
-            'user'     => 'postgres',
-            'password' => ''
-        );
+                'host'     => '127.0.0.1',
+                'dbname'   => 'postgres',
+                'user'     => 'postgres',
+                'password' => ''
+            );
 
         public $bunny_local
             = array(
