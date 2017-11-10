@@ -2,8 +2,6 @@
 
     namespace Sender4you\Diagnostics;
 
-    use Bunny\Exception\ClientException;
-    use Common\Connection\BunnyConnection;
     use Common\Connection\MemcachedConnect;
     use Config\SenderConfig;
 
