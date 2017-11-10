@@ -61,10 +61,14 @@
     //}
     // TODO: uncomment end
 
+    // TODO: delete
+    return;
+
     // get connection
     $api_connection = MaxiApi::getInstance();
 
     // make request
+    // TODO: complete API function
     $response = $api_connection->makeRequest('diagnosticReport',
         array(
             'errors' => json_encode($errors, JSON_HEX_QUOT)
