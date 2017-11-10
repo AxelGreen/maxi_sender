@@ -11,7 +11,6 @@
     use Common\Connection\MemcachedConnect;
     use Common\Connection\PgConnection;
     use Config\SenderConfig;
-    use Sender4you\Log\Info;
 
     /**
      * Class Helper
