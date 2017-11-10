@@ -141,6 +141,7 @@
 
             // make request
             $response = curl_exec($this->connection);
+            var_dump($response);
 
             // decode response
             $response = json_decode($response, true);

@@ -13,4 +13,7 @@
 # run run_server.sh - start server.php to serve simple http request (index page and mail.ru postmaster)
 * * * * * /etc/sender4you/bash/run_server.sh >/dev/null 2>>/var/log/sender4you/run_server.log
 
+# run run_diagnostics.sh - run diagnostics.php to check all VPS systems
+* * * * * /etc/sender4you/bash/run_diagnostics.sh >/dev/null 2>>/var/log/sender4you/run_diagnostics.log
+
 # empty new line required, don't delete it

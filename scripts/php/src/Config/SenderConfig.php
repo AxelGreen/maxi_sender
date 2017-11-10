@@ -49,6 +49,8 @@
 
         public $distributor_lifetime = '+6 hours';
 
+        public $memcached_diagnostic_param = 'broken';
+
         public $memcached_pool_param = 'active_in_pool';
 
         public $memcached_bounce_limit

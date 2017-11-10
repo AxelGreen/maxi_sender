@@ -8,7 +8,6 @@ MCPORT=11211
 # get value of active_in_pool
 ACTIVE=$(mc_get active_in_pool)
 REG="0"
-echo "${ACTIVE}"
 if [[ ${ACTIVE} =~ $REG ]] # not active in pool
 then
 	exit 1;

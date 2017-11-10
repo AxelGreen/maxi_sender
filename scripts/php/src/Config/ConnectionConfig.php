@@ -38,13 +38,14 @@
                 'host'           => 'http://api.sender4you.com/',
                 'version_prefix' => 'maxi/',
                 'endpoints'      => array(
-                    'template'        => 'template',
-                    'redirectDomains' => 'redirectDomains',
-                    'ips'             => 'ips',
-                    'hosts'           => 'hosts',
-                    'bigs'            => 'bigs',
-                    'vps'             => 'vps',
-                    'bounceLimits'    => 'bounceLimits'
+                    'template'         => 'template',
+                    'redirectDomains'  => 'redirectDomains',
+                    'ips'              => 'ips',
+                    'hosts'            => 'hosts',
+                    'bigs'             => 'bigs',
+                    'vps'              => 'vps',
+                    'bounceLimits'     => 'bounceLimits',
+                    'diagnosticReport' => 'diagnosticReport'
                 )
             );
 

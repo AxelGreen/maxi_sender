@@ -28,8 +28,6 @@
         public function fix()
         {
 
-            var_dump($this->errors);
-
             // no errors to fix
             if (empty($this->errors)) {
                 return $this;
