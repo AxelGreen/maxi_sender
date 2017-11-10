@@ -5,6 +5,7 @@
     use Sender4you\Diagnostics\Memcached;
     use Sender4you\Diagnostics\Postgres;
     use Sender4you\Diagnostics\Bunny;
+    use Sender4you\Diagnostics\Running;
 
     require_once __DIR__.'/vendor/autoload.php';
 
@@ -31,5 +32,9 @@
     // bunny
     $bunny = new Bunny();
     $errors += $bunny->check()->fix()->check()->getErrors();
+
+    // running - check if all continuous processes is running - distributor, senders, server and so one
+    $running = new Running();
+    $errors += $running->check()->fix()->check()->getErrors();
 
     var_dump($errors);
