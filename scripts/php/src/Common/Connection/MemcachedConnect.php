@@ -74,4 +74,15 @@
 
         }
 
+        public function delete(string $key)
+        {
+
+            if (empty($key)) {
+                return false;
+            }
+
+            return $this->connection->delete($key);
+
+        }
+
     }

@@ -3,6 +3,7 @@
     namespace Sender4you\Configure;
 
     use Common\Connection\PgConnection;
+    use PHPMailer\PHPMailer\Exception;
 
     class Postgres
     {
@@ -10,7 +11,12 @@
         public function run()
         {
 
-            $connection = PgConnection::getInstance();
+            $connection = null;
+            try {
+                $connection = PgConnection::getInstance();
+            } catch (Exception $ex) {
+                return;
+            }
 
             $this->createTables($connection);
 

@@ -3,6 +3,7 @@
     namespace Common\Connection;
 
     use Config\ConnectionConfig;
+    use Exception;
 
     class PgConnection extends Connection
     {
@@ -15,6 +16,9 @@
             $db_config = ConnectionConfig::getInstance();
             $connection_string = $this->createConnectionString($db_config);
             $this->connection = pg_connect($connection_string);
+            if ($this->connection === false) {
+                throw new Exception('Can\'t connect to postgres');
+            }
 
         }
 
@@ -61,6 +65,10 @@
             }
 
             $rows = pg_query_params($this->connection, $query, $params);
+
+            if ($rows === false) {
+                throw new Exception(pg_last_error($this->connection));
+            }
 
             $results = array();
             while ($row = pg_fetch_assoc($rows)) {
