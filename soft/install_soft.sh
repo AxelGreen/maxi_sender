@@ -30,8 +30,13 @@ fi
 
 # start installation
 apt-get update
-apt-get install -y fail2ban htop memcached netcat git
-apt-get install -y postgresql-9.6 erlang erlang-nox rabbitmq-server exim4
+apt-get install -y fail2ban
+apt-get install -y htop
+apt-get install -y memcached
+apt-get install -y git
+apt-get install -y postgresql-9.6
+apt-get install -y exim4
+apt-get install -y erlang erlang-nox rabbitmq-server
 apt-get install -y --allow-unauthenticated php7.0 php7.0-opcache php7.0-mbstring php7.0-bcmath php7.0-zip php7.0-geoip php7.0-curl php7.0-json php7.0-pgsql php7.0-cli php7.0-memcached
 
 # composer
