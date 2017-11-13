@@ -30,14 +30,22 @@ fi
 
 # start installation
 apt-get update
+# block login attempts
 apt-get install -y fail2ban
 apt-get install -y htop
+# store some flags for fast access
 apt-get install -y memcached
-apt-get install -y git
-apt-get install -y postgresql-9.6
-apt-get install -y exim4
+# need to membash.sh - access memcache from bash
 apt-get install -y netcat-traditional
+# for composer
+apt-get install -y git
+# db
+apt-get install -y postgresql-9.6
+# mailing agent
+apt-get install -y exim4
+# rabbit server
 apt-get install -y erlang erlang-nox rabbitmq-server
+# php7.0 and it's extensions
 apt-get install -y --allow-unauthenticated php7.0 php7.0-opcache php7.0-mbstring php7.0-bcmath php7.0-zip php7.0-geoip php7.0-curl php7.0-json php7.0-pgsql php7.0-cli php7.0-memcached
 
 # composer
