@@ -7,9 +7,8 @@ MCPORT=11211
 
 # get value of active_in_pool
 BROKEN=$(mc_get broken)
-echo $BROKEN
 REG="1"
-if ! [[ ${BROKEN} =~ $REG ]] # broken
+if [[ ${BROKEN} =~ $REG ]] # broken
 then
 	exit 1;
 fi
