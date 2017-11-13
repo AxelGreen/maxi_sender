@@ -14,7 +14,7 @@
     require_once __DIR__.'/vendor/autoload.php';
 
     // sleep random amount of seconds. We need this to start this process not simultaneously on all VPSs
-    sleep(rand(10, 250));
+    sleep(rand(10, 240));
 
     // get errors for each systems
     $errors = array();
