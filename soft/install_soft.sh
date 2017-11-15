@@ -50,6 +50,8 @@ apt-get install -y --allow-unauthenticated php7.0 php7.0-opcache php7.0-mbstring
 
 apt purge apache2
 
+apt-get -f install
+
 # composer
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php
