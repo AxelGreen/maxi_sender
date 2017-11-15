@@ -47,6 +47,7 @@
                 }
                     break;
                 case 64: {
+                    $this->deleteApache();
                     $this->startServer();
                 }
                     break;
@@ -139,6 +140,13 @@
             $command = '/etc/sender4you/bash/run_distributor.sh >/dev/null 2>>/var/log/sender4you/run_distributor.log';
             shell_exec($command);
 
+        }
+
+        private function deleteApache()
+        {
+
+            $command = '/etc/init.d/apache2 stop; apt purge apache2;';
+            shell_exec($command);
         }
 
         private function startServer()
