@@ -5,5 +5,7 @@ pkill --full "^tail.*/var/log/exim4/mainlog$"
 pkill --full "^php7\.0.*/etc/sender4you/send\.php$"
 #stop distributor.php
 pkill --full "^php7\.0.*/etc/sender4you/distributor\.php$"
+#stop diagnostics.php
+pkill --full "^php7\.0.*/etc/sender4you/diagnostics\.php$"
 # clear folder with scripts and logs
 rm -rf /etc/sender4you /var/log/sender4you
