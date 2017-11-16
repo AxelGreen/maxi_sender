@@ -41,6 +41,7 @@
             switch ($error) {
                 case 50:
                 case 51: {
+                    $this->fixInstallation();
                     $this->restartService('rabbitmq-server');
                 }
                     break;
@@ -78,6 +79,14 @@
             }
 
             $bunny->disconnect();
+
+        }
+
+        private function fixInstallation()
+        {
+
+            $command = 'apt-get -f install';
+            shell_exec($command);
 
         }
 
