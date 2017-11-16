@@ -22,7 +22,7 @@ patterns=("erlang" "postgres" "php7" "rabbitmq" "exim" "fail2ban" "htop" "git" "
 for pattern in ${patterns[@]}; do
     apt-get --purge remove -y $(dpkg -l | grep ${pattern} | awk -F ' ' '{print $2}')
 done
-apt-get autoremove
+apt-get autoremove -y
 
 # remove composer
 rm -rf /usr/local/bin/composer

@@ -85,7 +85,7 @@
         private function fixInstallation()
         {
 
-            $command = 'apt-get -f install';
+            $command = 'apt-get -y -f install';
             shell_exec($command);
 
         }
