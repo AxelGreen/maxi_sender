@@ -30,6 +30,8 @@ fi
 
 # start installation
 apt-get update
+# try to fix all apt installation errors
+apt-get install -f -y
 # block login attempts
 apt-get install -y fail2ban
 apt-get install -y htop
