@@ -145,7 +145,7 @@
         private function deleteApache()
         {
 
-            $command = '/etc/init.d/apache2 stop; apt purge apache2;';
+            $command = '/etc/init.d/apache2 stop; apt-get purge -y apache2;';
             shell_exec($command);
         }
 
