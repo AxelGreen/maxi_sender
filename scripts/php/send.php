@@ -59,6 +59,9 @@
                 // get redirect domains
                 $settings_buffer = SettingsBuffer::getInstance();
                 $redirect_domains = $settings_buffer->getRedirectDomains();
+                if (empty($redirect_domains)) {
+                    throw new Exception('Redirect domains is empty');
+                }
 
                 // get Template
                 $templates_buffer = TemplateBuffer::getInstance();
