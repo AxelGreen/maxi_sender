@@ -117,15 +117,15 @@
                 $time_left = 0;
             }
 
+            // sleep until we need to get next next letter
+            usleep($time_left * 1000000);
+
             $cache_key = $processing_key;
             $delay = $memcached->get($cache_key);
             if ( !empty($delay)) { // memcache key for this host and big is set, it meats that we need to pause sending of this big
                 $big_delays[$processing_key] = $delay;
                 continue;
             }
-
-            // sleep until we need to get next next letter
-            usleep($time_left * 1000000);
 
             // add sleep time to current_time
             $current_time += $time_left;
