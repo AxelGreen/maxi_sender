@@ -35,6 +35,7 @@
         private $fixed_shortcodes
             = array(
                 'fix_int'  => 1,
+                'fix_hex'  => 1,
                 'fix_link' => 1,
                 'fix_text' => 1,
                 'fix_date' => 1,
@@ -325,6 +326,13 @@
 
                                 }
 
+                            }
+                                break;
+                            case 'fix_hex': {
+
+                                $hex = sha1(microtime(true));
+                                $hex = substr($hex, 0, $shortcode_params[1]);
+                                return $hex;
                             }
                                 break;
                             case 'fix_link': { // replace link shortcode
