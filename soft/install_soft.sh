@@ -18,6 +18,7 @@ echo "deb http://www.rabbitmq.com/debian/ testing main" | tee "/etc/apt/sources.
 wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
 
 # for php 7.0
+apt-get install -y dirmngr
 version=$(awk '{print $3}' /etc/*-release)
 if [ "${version}" == "8" ]; then
     echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
