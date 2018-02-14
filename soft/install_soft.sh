@@ -26,7 +26,7 @@ if [ "${version}" == "8" ]; then
     wget https://www.dotdeb.org/dotdeb.gpg
     apt-key add dotdeb.gpg && rm dotdeb.gpg
 else
-    add-apt-repository -y ppa:ondrej/php
+    # add-apt-repository -y ppa:ondrej/php
 fi
 
 # start installation
