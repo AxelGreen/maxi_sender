@@ -25,8 +25,6 @@ if [ "${version}" == "8" ]; then
     echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
     wget https://www.dotdeb.org/dotdeb.gpg
     apt-key add dotdeb.gpg && rm dotdeb.gpg
-else
-    # add-apt-repository -y ppa:ondrej/php
 fi
 
 # start installation
